@@ -26,7 +26,7 @@ Enter answers to the questions just below the >Answer: prompt.
 
 2. Are there any components of the course about which you feel confident?
 
-> Answer: I feel confident about the support systems in this course. The instructions in the modules are extremely helpful and provide step by step tools to understand each task. I really appreciate that we have many opporunities to ask questions through slack and office hours!
+> Answer: I feel confident about the support systems in this course. The instructions in the modules are extremely helpful and provide step by step tools to understand each task. I really appreciate that we have many opporunities to ask questions through Slack and office hours!
 
 3. Are there any components of the course about which you feel apprehensive?
 
