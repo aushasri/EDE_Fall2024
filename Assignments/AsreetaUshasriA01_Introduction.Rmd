@@ -22,15 +22,15 @@ Enter answers to the questions just below the >Answer: prompt.
 
 1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
 
-> Answer: I have no prior experience with R or Git. I have taken an introductory statistics course which aided my understanding of data analytics. As a Public Relationships specialist, I learned about the cybersecurity concepts and the importance of software updates. However, this class will be my first technical introduction into data analytics.
+> Answer: I have no prior experience with R or Git. I have taken an introductory statistics course which aided my understanding of data analytics. As a Public Relations specialist, I learned about cybersecurity concepts and the importance of software updates. However, this class will be my first technical introduction into data analytics.
 
 2. Are there any components of the course about which you feel confident?
 
-> Answer: I feel confident about the support systems in this course. The instructions in the modules are extremely helpful and provide step by step tools to understand each task. I also have many opporunities to ask questions through slack and office hours.
+> Answer: I feel confident about the support systems in this course. The instructions in the modules are extremely helpful and provide step by step tools to understand each task. I really appreciate that we have many opporunities to ask questions through slack and office hours!
 
 3. Are there any components of the course about which you feel apprehensive?
 
-> Answer: I am apprehensive about my ability to learn coding languages, but I am also eager to learn how to use Git and R. I recently joined a Bass Connections project, which aims to use drones and GIS tools to monitor elephant health and movement. I am excited for the opportunity to apply data analytics to my Bass Connections team.
+> Answer: I am apprehensive about my ability to learn coding languages, but I am also eager to develop the skills to use Git and R. I recently joined a Bass Connections project, which aims to utilize drones and GIS tools to monitor elephant health and movement patterns. I am excited for the opportunity to apply data analytics to my Bass Connections team.
 
 
 ## 2) GitHub
