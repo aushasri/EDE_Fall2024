@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 title: "2: Reproducibility and Coding Basics"
 subtitle: "Environmental Data Analytics"
 author: "John Fay and Luana Lima | Developed by Kateri Salk"
@@ -104,13 +109,14 @@ You can create R objects with an *assignment* statement. The indicator for an as
 A quick note: in many situations, a `=` sign will substitute for a `<-`. Resist this temptation! This will be confusing later, when `=` means something else.
 
 ```{r}
-x <- 3*4
+
 ```
 
 Now, call up the object `x`. Notice that `x` has also just shown up in your Environment tab.
 
-```{r}
-x
+```{r Object}
+object<-"x"
+
 ```
 
 ### Naming
@@ -135,9 +141,12 @@ long_name_for_illustration <- 11
 Within your R code, it is often useful to include notes about your workflow. So that these aren't interpreted by the software as code, precede the notes with a `#` sign. Your editor will display this comment as a different color to indicate it will not be run in the console. Comments can be placed on their own lines or at the end of a line of code.
 
 ```{r}
-# I am demonstrating a comment here. 
+# I am demonstrating a comment here. Use Pound sign to start comment.
 
 1 + 1 # This is a simple math problem
+
+# 1 + 1
+
 ```
 
 ### Functions
