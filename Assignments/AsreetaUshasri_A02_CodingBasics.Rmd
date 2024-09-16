@@ -63,19 +63,6 @@ A2.CenterofSequence.Part1(A2.Mean.Part1.Sequence, A2.Median.Part1.Sequence)
 
 #4. Please reference the comments within the code for the methodology.
 
-#I also created a function to describe the shape and skew of the distribution.
-#If the mean is greater than the median, the distribution is skewed right.
-#If the mean is less than the median, the distribution is skewed left.
-#If the mean and the median are identical, then the distribution is symmetric.
-
-A2.DistributionofSequence.Part1 <- function(A2.Mean.Part1.Sequence, A2.Median.Part1.Sequence)
-  
-  if({A2.Mean.Part1.Sequence>A2.Median.Part1.Sequence})  {print("SkewedRight")}
-    
-  if({A2.Mean.Part1.Sequence>A2.Median.Part1.Sequence})  {print("SkewedLeft")}
-      
-  if({A2.Mean.Part1.Sequence==A2.Median.Part1.Sequence}) {print("Symmetrical")}
-
 
 ```
 
