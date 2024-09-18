@@ -134,7 +134,7 @@ USGS.flow.data <- read.csv(
 #StringsAsFactors: when CVS becomes dataframes, all characters become factors ex. categorical factor
 
 # What happens if we don't assign a name to our imported dataset?
-read.csv(here("./Data/Raw/USGS_Site02085000_Flow_Raw.csv"),stringsAsFactors = TRUE)
+
 
 ```
 
@@ -169,14 +169,14 @@ Take a moment to read through the README file associated with the USGS dataset o
 Next, have a look at your dataset. Browse your data in RStudio's viewer. Have a look at the structure of your data. Consider renaming columns. 
 
 ```{r Exploring data}
-View(USGS.flow.data)
+#View(USGS.flow.data)
 # Alternate option: click on data frame in Environment tab
 
 class(USGS.flow.data)
-colnames(USGS.flow.data)
+names(USGS.flow.data)
 
 # Rename columns
-colnames(USGS.flow.data) <- c("agency_cd", "site_no", "datetime", 
+names(USGS.flow.data) <- c("agency_cd", "site_no", "datetime", 
                               "discharge.max", "discharge.max.approval", 
                               "discharge.min", "discharge.min.approval", 
                               "discharge.mean", "discharge.mean.approval", 
@@ -201,7 +201,7 @@ summary(USGS.flow.data)  #could point to column only with $
 ```
 
 What happened to blank cells in the spreadsheet when they were imported into R?
-> Answer: 
+> Answer: The blank numeric cells are automatically populated with NA. For characters, blank cells will remain blank.
 
 ### Identify and address issues: Missing Data
 
@@ -213,12 +213,14 @@ summary(USGS.flow.data$gage.height.mean)
 ```
 Question: What types of research questions might make it favorable to remove NAs from a dataset, and what types of research questions might make it favorable to retain NAs in the dataset?
 
-> Answer: 
+> Answer: For research questions with a singular response, NAs may be useful to retain. For example, answers to a yes or no survey where some participants only responded to some questions (but not all the questions). However, for small data sets where attributes are needed for multiple categories, omitting NAs may be useful. Removing NAs can change the mean and standard deviation. For example, if a power plant has missing data on the annual generation, omitting that plant from the mean annual generation of the data set is necessary.
 
 ```{r Removing NAs}
 USGS.flow.data.complete <- na.omit(USGS.flow.data)
 dim(USGS.flow.data)
 dim(USGS.flow.data.complete)
+
+#If there are any missing values, you cannot calculate mean
 
 mean(USGS.flow.data.complete$discharge.mean)
 sd(USGS.flow.data.complete$discharge.mean)
@@ -250,7 +252,11 @@ Alternatively, we can tell R to import it as a factor when we read the data in
 ```{r}
 USGS.flow.data2  <- read.csv(
   file = here("./Data/Raw/USGS_Site02085000_Flow_Raw.csv"),
-  stringsAsFactors = TRUE) 
+  stringsAsFactors = TRUE,
+  colClasses = c('site_no'='factor')) 
+
+#Adding colclasses overwrites the default on importing columns
+
 ```
 
 
@@ -285,6 +291,9 @@ format(today, format = "%B")
 #format(today, format = "")
 
 USGS.flow.data$datetime <- as.Date(USGS.flow.data$datetime, format = "%m/%d/%y") 
+
+#Separated by / because this matches the current format of the imported data
+
 ```
 
 Note that for every date prior to 1969, R has assigned the date in the 2000s rather than the 1900s. This can be fixed with an `ifelse` statement inside a function. Run through the code below and write what is happening in the comment above each line.
@@ -317,7 +326,7 @@ We just edited our raw dataset into a processed form. We may want to return to t
 ```{r Saving data}
 write.csv(
   USGS.flow.data, 
-  file = here("/Data/Processed/USGS_Site02085000_Flow_Processed.csv"), 
+  file = here("./Data/Processed/USGS_Site02085000_Flow_Processed.csv"), 
   row.names=FALSE)
 
 ```
