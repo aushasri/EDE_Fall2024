@@ -62,6 +62,7 @@ You need to load packages each time you start (or restart) an R coding session; 
 #install.packages('dplyr')
 #install.packages('ggplot')
 #install.packages('here')
+#install.packages('ggtext')
 
 #Load the tidyverse, ggplot2, and here package
 library(dplyr)
@@ -121,14 +122,16 @@ Commons functions to import datasets and store as data frames are *read.table()*
 
 ```{r Importing data}
 # Absolute file path (not recommended)
-#read.csv(
-#  file="/home/guest/EDE_Fall2024/Data/Raw/USGS_Site02085000_Flow_Raw.csv",
-#  stringsAsFactors = TRUE)
+read.csv(
+  file="/home/guest/AU_EDE_Fall2024/Data/Raw/USGS_Site02085000_Flow_Raw.csv",
+  stringsAsFactors = TRUE)
 
 # Relative file path (friendly for users regardless of machine)
 USGS.flow.data <- read.csv(
   file = here("./Data/Raw/USGS_Site02085000_Flow_Raw.csv"),
-  stringsAsFactors = TRUE)   
+  stringsAsFactors = TRUE)
+
+#StringsAsFactors: when CVS becomes dataframes, all characters become factors ex. categorical factor
 
 # What happens if we don't assign a name to our imported dataset?
 read.csv(here("./Data/Raw/USGS_Site02085000_Flow_Raw.csv"),stringsAsFactors = TRUE)
