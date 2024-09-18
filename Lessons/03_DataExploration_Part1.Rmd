@@ -77,7 +77,7 @@ library(tidyverse)
 
 Question: What happens in the console when you load a package?
 
-> Answer: 
+> Answer: The console presents a warning about two packages having the same command, such as 'filter.' When using the filter package, the code must specify which package to pull from.
 
 ---
 
@@ -122,9 +122,7 @@ Commons functions to import datasets and store as data frames are *read.table()*
 
 ```{r Importing data}
 # Absolute file path (not recommended)
-read.csv(
-  file="/home/guest/AU_EDE_Fall2024/Data/Raw/USGS_Site02085000_Flow_Raw.csv",
-  stringsAsFactors = TRUE)
+#read.csv(file="/home/guest/AU_EDE_Fall2024/Data/Raw/USGS_Site02085000_Flow_Raw.csv",stringsAsFactors = TRUE)
 
 # Relative file path (friendly for users regardless of machine)
 USGS.flow.data <- read.csv(
@@ -134,6 +132,8 @@ USGS.flow.data <- read.csv(
 #StringsAsFactors: when CVS becomes dataframes, all characters become factors ex. categorical factor
 
 # What happens if we don't assign a name to our imported dataset?
+#The console returns an error.
+#read.csv(here("./Data/Raw/USGS_Site02085000_Flow_Raw.csv)",stringAsFactors =))
 
 
 ```
@@ -163,7 +163,7 @@ Prior to analyzing your dataset, take a moment to understand your data. Where di
 
 Take a moment to read through the README file associated with the USGS dataset on discharge at the Eno River. Where can you find this file? How does the placement and information found in this file relate to the best practices for reproducible data analysis?
 
-> ANSWER: 
+> ANSWER: This file is under home/AU_EDE_Fall2024/Data/Metadata. This file describes the collection methodology for this set of data. Future researchers may need these methods to collect similar data sets for comparison. The Read Me file also discusses units and defines terms used in the data set. This is important in ensuring the data is easy to understand for future individuals.
 
 ### Examine properties of your dataset
 Next, have a look at your dataset. Browse your data in RStudio's viewer. Have a look at the structure of your data. Consider renaming columns. 
