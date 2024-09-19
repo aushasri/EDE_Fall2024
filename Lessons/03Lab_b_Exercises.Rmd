@@ -14,6 +14,8 @@ library(tidyverse); library(lubridate); library(here)
 here()
 
 #Import data
+#Be critical of your data set - who collected the data? What are the limitations of this data set?
+
 pm25 <- read.csv(
   #----ENTER THE FILENAME HERE, USING THE here() PACKAGE----
   stringsAsFactors = TRUE,

@@ -3,6 +3,8 @@ title: "Lab 3b - Workspaces, Dates, and Factors"
 author: "Environmental Data Analytics | John Fay and Luana Lima "
 date: "Fall 2024"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Objectives
@@ -61,7 +63,7 @@ file.exists(filename)
 #A tidied read.csv command
 usgs_flow_data <- read.csv(
   file = here('Data','Raw','USGS_Site02085000_Flow_Raw.csv'),
-  stringsAsFactors = T
+  stringsAsFactors = TRUE
 )
 
 #Create and print a list of all files in a folder using "dir" and "here"
@@ -78,6 +80,7 @@ print(filenames)
 ```{r here in action}
 
 # 1. Read the 'NTL-LTER_Lake_ChemistryPhysics_Raw.csv' into a dataframe
+
 
 
 # 2.
@@ -102,6 +105,16 @@ Remember formatting of dates in R:
 # (code must be uncommented)
 today <- Sys.Date()
 format(today, format = "%B")
+
+today <- Sys.Date()
+format(today, format = "%Y")
+
+today <- Sys.Date()
+format(today, format = "%m")
+
+today <- Sys.Date()
+format(today, format = "%D")
+
 #format(today, format = "")
 #format(today, format = "")
 #format(today, format = "")
@@ -132,9 +145,10 @@ date_obj_today
 
 #Ex_3 - on your own...
 str_juneteenth <- "19 June 1865"
-#Since the format is month-day-year we will use function mdy()
-#date_juneteenth <- ()
-#date_juneteenth
+
+date_juneteenth <- dmy(str_juneteenth)
+date_juneteenth
+
 ```
 ### The century issue
 
@@ -241,7 +255,7 @@ class(sites$dow)
 #List the unique values in the column
 unique(sites$dow)
 
-#Summary - is it meaningful?
+#Summary - is it meaningful? Now R groups the data instead of averaging the data, which is much more meaningful.
 summary(sites$dow)
 
 #Show the levels associated with our factor column
