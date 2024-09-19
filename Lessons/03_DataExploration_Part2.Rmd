@@ -68,25 +68,28 @@ Visualize count data for categorical variables.
 ```{r, fig.height = 3, fig.width = 4}
 ggplot(data = USGS.flow.data, aes(x = discharge.mean.approval)) +
   geom_bar()
+
+#This is categorical - bar chart with separate categories.
+
 ```
 
 ### Histogram (function: geom_histogram)
 Visualize distributions of values for continuous numerical variables. What is happening in each line of code? Insert a comment above each line.
 
 ```{r, fig.height = 3, fig.width = 4}
-# 
+# This defines the x axis
 ggplot(USGS.flow.data) +
   geom_histogram(aes(x = discharge.mean))
 
-# 
+# Geom describes the binwidth
 ggplot(USGS.flow.data) +
   geom_histogram(aes(x = discharge.mean), binwidth = 10)
 
-# 
+# AES command is about aesthetics. This tells R the number of bins.
 ggplot(USGS.flow.data) +
   geom_histogram(aes(x = discharge.mean), bins = 20)
 
-# 
+# Bins is part of geome, not the AES command.
 ggplot(USGS.flow.data, aes(x = discharge.mean)) +
   geom_histogram(binwidth = 10) + 
   scale_x_continuous(limits = c(0, 500))
@@ -102,14 +105,15 @@ ggplot(USGS.flow.data) +
 An alternate to a histogram is a frequency polygon graph (distributions of values for continuous numerical variables). Instead of displaying bars,  counts of continuous variables are displayed as lines. This is advantageous if you want to display multiple variables or categories of variables at once.
 
 ```{r, fig.height = 3, fig.width = 4}
-#
+#Bins are the same. Each value needs to be a different geom command. lty = line type, 2 means dashed line.
+
 ggplot(USGS.flow.data) +
   geom_freqpoly(aes(x = gage.height.mean), bins = 50) +
-  geom_freqpoly(aes(x = gage.height.min), bins = 50, color = "darkgray") +
+  geom_freqpoly(aes(x = gage.height.min), bins = 50, color = "blue") +
   geom_freqpoly(aes(x = gage.height.max), bins = 50,  lty = 2) +
   scale_x_continuous(limits = c(0, 10))
 
-#
+# When the color is inside the AES parentheses, this plots the different categories as two separate lines with default colors. Graph plots the mean of A and P categories.
 ggplot(USGS.flow.data) +
   geom_freqpoly(aes(x = gage.height.mean, color = gage.height.mean.approval), bins = 50) +
   scale_x_continuous(limits = c(0, 10)) +
@@ -159,20 +163,19 @@ ggplot(USGS.flow.data) +
 
 Question: under what circumstances would it be beneficial to use each of these graph types (bar plot, histogram, frequency polygon, box-and whisker, violin, scatterplot)?
 
-> Answer: 
+> Answer: A bar chart is useful when comparing the number of individual objects in each category. A historgram is useful when looking at a continuous distribution. The box-and-whisker plot and the violin plot are useful for looking at the interquartile range and calculating outliers. The frequency polygon is useful for comparing continuous distributions of multiple categories (ex. the min and the maximum), because historgrams can only plot one category of continuous distributions. Lastly, the scatterplot shows each individual data value, which is useful when a research wants to determine the correlation (or lack of correlation) between two variables.
 
 ## Ending discussion
 What did you learn about the USGS discharge dataset today? What separate insights did the different graph types offer?
-> Answer: 
-
+> Answer: I learned that the category A had more outliers than the category P, displayed in the box and whisker and violin charts. The histogram and frequency polygon plots depicted a strong right skew in the data. Lastly, the bar chart showed that category A had the highest count of any category.
 
 How can multiple options for data exploration inform our understanding of our data?
 
-> Answer: 
+> Answer: Different plots can reveal insights about the distribution and important values (such as the mean, max, min). Exploring different plot techniques allows researchers to utilize the graph that is most useful for their data set. For example, the scatterplot was less useful for the USGS data because it did not depict the min, mean, max, outliers or the right skew of the distribution. By examining multiple options, researchers can determine the best visualization tool.
 
 
 Do you see any patterns in the USGS data for the Eno River? What might be responsible for those patterns and/or relationships?
 
-> Answer: 
+> Answer: This histogram showcased a concentration of count in the 0 - 100 discharge mean range. This reveals that Eno River discharge is concentrated in this category. The A category had a lot of outliers and a higher count of data in general, whereas the P category had less outliers. This reveals that large sample sizes have more outliers when measuring discharge in the case of Eno River.
 
 
