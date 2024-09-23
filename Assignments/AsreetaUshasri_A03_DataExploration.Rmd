@@ -61,18 +61,21 @@ Litter <- read.csv(
 
 2.  The neonicotinoid dataset was collected from the Environmental Protection Agency's ECOTOX Knowledgebase, a database for ecotoxicology research. Neonicotinoids are a class of insecticides used widely in agriculture. The dataset that has been pulled includes all studies published on insects. Why might we be interested in the ecotoxicology of neonicotinoids on insects? Feel free to do a brief internet search if you feel you need more background information.
 
-> Answer: According to the Natural Resources Defense Council, neonic instectides indiscriminantly poison pests and ecologically important insects. For example, bees, butterflies and other pollinators have been killed by neonics in recent years. Neonics impact the nervous system of insects and impede immune systems. Neonics also remain in the soil for years after agricultural application. Studying the ecotoxicology of neonicotinoids on insects is crucial for determining the lasting affect of these strong pesticides, and whether researchers can protect important pollinators from the long-term harm of neonics (NRDC, 2022).
+> Answer: According to the Natural Resources Defense Council, neonic instectides indiscriminantly poison pests and ecologically important insects. For example, bees, butterflies and other pollinators have been killed by neonics in recent years. Neonics impact the nervous system of insects and impede immune systems. Neonics also remain in the soil for years after agricultural application. Studying the ecotoxicology of neonicotinoids on insects is crucial for determining the lasting impact of these strong pesticides, and whether researchers can protect important pollinators from the long-term harm of neonics (Lindwall, 2022).
 
 3.  The Niwot Ridge litter and woody debris dataset was collected from the National Ecological Observatory Network, which collectively includes 81 aquatic and terrestrial sites across 20 ecoclimatic domains. 32 of these sites sample forest litter and woody debris, and we will focus on the Niwot Ridge long-term ecological research (LTER) station in Colorado. Why might we be interested in studying litter and woody debris that falls to the ground in forests? Feel free to do a brief internet search if you feel you need more background information.
 
-> Answer: The USDA Forest Service describes woody litter as debris from fallen or decaying trees and plant life in forests. This material is an important part of the carbon cycle and nutrient recycling in ecosystems. The quality of the woody debris can impact the quality of future soil in these ecosystems. Studying woody debris can help researchers determine if there are any harmful chemicals seeping into protected forests, or if there are any nutrient deficiencies in the soil system (USDA, 2000).
+> Answer: The USDA Forest Service describes woody litter as debris from fallen or decaying trees and plant life in forests (Scheungrab et al., 2000). This material is an important part of the carbon cycle and nutrient recycling in ecosystems. The quality of the woody debris can impact the quality of future soil in these ecosystems. Studying woody debris can help researchers determine if there are any harmful chemicals seeping into protected forests, or if there are any nutrient deficiencies in the soil system (Scheungrab et al., 2000).
 
 4.  How is litter and woody debris sampled as part of the NEON network? Read the NEON_Litterfall_UserGuide.pdf document to learn more. List three pieces of salient information about the sampling methods here:
 
 > Answer: The NEON_Litterfall_UserGuide is located in the Metadata folder, under Data.
- 1. The litter debris samples are collected from elevated traps, and the fine wood debris samples are collected from ground traps.
- 2. Elevated traps are sampled once every 1-2 months in evergreen forests, or once every two weeks in deciduous forests.
- 3. Ground traps are sampled once a year.
+
+>1. The litter debris samples are collected from elevated traps, and the fine wood debris samples are collected from ground traps (Jones, K. & Flagg, C., 2017, p. 3).
+
+>2. Elevated traps are sampled once every 1-2 months in evergreen forests, or once every two weeks in deciduous forests (Jones, K. & Flagg, C., 2017, p. 5).
+
+>3. Ground traps are sampled once a year (Jones, K. & Flagg, C., 2017, p. 5).
 
 ## Obtain basic summaries of your data (Neonics)
 
@@ -103,7 +106,7 @@ summary(Litter$Effect)
 
 ```
 
-> Answer: The population and mortality of insects are the most common effects studied in this dataset. Neonic pesticides are particularly concerning because they kill insects widely and indiscriminately, including pollinators. The mortality rate and population decrease of butterflies, bees, and ecologically important insects is one of the largest concerns with neonic pesticides. Therefore, studying population and mortality rates with respect to neonic insecticides is useful and critical for scientists. 
+> Answer: The population and mortality of insects are the most common effects studied in this dataset. Neonic pesticides are particularly concerning because they kill insects widely and indiscriminately, including pollinators (Lindwall, 2022). The mortality rate and population decrease of butterflies, bees, and ecologically important insects is one of the largest concerns with neonic pesticides. Therefore, studying population and mortality rates with respect to neonic insecticides is useful and critical for scientists. 
 
 
 7.  Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.[TIP: Explore the help on the `summary()` function, in particular the `maxsum` argument...]
@@ -149,7 +152,7 @@ ggplot(Neonics) + geom_freqpoly(aes(x = Publication.Year, color = Test.Location)
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
 
-> Answer: The most common test location is in a lab, followed by the natural field. However, this trend differs over time. From 1990 - 2000, the natural field was the most common test location, and the lab was the second most popular test location. Starting in 2000, this pattern has switched. The lab is the most common test location from 2000 - 2020, whereas the natural field is the second most popular test location. Throughout this time period, the artificial field and the undeterminable field were the least common test locations.
+> Answer: The most common test location is the lab, followed by the natural field. However, this trend differs over time. From 1990 - 2000, the natural field was the most common test location, and the lab was the second most popular test location. Starting in 2000, the lab became the most common test location, whereas the natural field became the second most popular test location. From 1980 - 2020, the artificial field and the undeterminable field were the least common test locations.
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
@@ -162,13 +165,13 @@ ggplot(data = Neonics, aes(x = Endpoint)) +
 
 ```
 
-> Answer: The two most common endpoints are NOEL and LOEL. NOEL is defined as the "No-observable-effect-level" in the terrestrial database (p. 723). LOEL is defined as the "Lowest-observable-effect-level" in the terrestrial database (p. 722).
+> Answer: The two most common endpoints are NOEL and LOEL. NOEL is defined as the "No-observable-effect-level" in the terrestrial database (GDIT, 2019, p. 723). LOEL is defined as the "Lowest-observable-effect-level" in the terrestrial database (GDIT, 2019, p. 722).
 
 ## Explore your data (Litter)
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018.
 
-The litter was sample on August 2, 2018 and August 30, 2018.
+The litter was sampled on August 2, 2018 and August 30, 2018.
 
 ```{r}
 
@@ -223,12 +226,17 @@ Why is the boxplot a more effective visualization option than the violin plot in
 
 What type(s) of litter tend to have the highest biomass at these sites?
 
-> Answer: The needles functional group has the highest median and third quartile value for dry mass, indicating that this group tends to have the highest biomass. The mixed functional group tends to have the second highest biomass, shown with the second highest median. Although the twigs/branches functional group has an outlier with a biomass above 5.0, the median and thrid quartile values are below the mixed functional group. Therefore the twigs/branches tend to have a lower biomass than the mixed group, putting the twigs/branches as the third highest biomass category. The other categories are fairly similar in having a median biomass value under 1.0.
+> Answer: The needles functional group has the highest median and third quartile value for dry mass, indicating that this group tends to have the highest biomass. The mixed functional group tends to have the second highest biomass, shown with the second highest median. Although the twigs/branches functional group has an outlier with a biomass above 5.0, the median and thrid quartile values are below the mixed functional group. In general, the twigs/branches has a lower biomass than the mixed group, which makes the twigs/branches the third highest biomass category. The other categories are fairly similar in having a median biomass value under 1.0.
 
 References
 
-https://www.nrdc.org/stories/neonicotinoids-101-effects-humans-and-bees
+Lindwall, C. (2022). Neonicotinoids 101: The Effects on Humans and Bees. National Resources Defense Council. https://www.nrdc.org/stories/neonicotinoids-101-effects-humans-and-bees
 
-https://research.fs.usda.gov/treesearch/20001#:~:text=Woody%20debris%20is%20an%20important,influencing%20water%20flows%20and%20sediment
+Scheungrab, Donna B.; Trettin, Carl C.; Lea, Russ; Jurgensen, Martin F. 2000. Woody debris. In: Gen. Tech. Rep. SRS-38. Asheville, NC: U.S. Department of Agriculture, Forest Service, Southern Research Station. p. 47-48.
 
-https://www.osu.edu/impact/research-and-innovation/bee-population
+Bush, G. (2020) How you can keep bees from becoming endangered. Ohio State Impact. https://www.osu.edu/impact/research-and-innovation/bee-population
+
+General Dynamics Information Technology (GDIT). (2019).
+ECOTOXicology Knowledgebase System, Ecotox Code Appendix.
+
+Jones, K. & Flagg, C. (2017). NEON User Guide to Litterfall and Fine Woody Debris Sampling (NEON.DP1.10033). Revision A.
