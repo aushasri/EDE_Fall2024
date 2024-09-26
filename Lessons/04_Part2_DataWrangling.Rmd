@@ -58,8 +58,8 @@ NTL.nutrient.data.PeterPaul <-
   drop_na(depth)
 
 # Save processed nutrient file
-#write.csv(NTL.nutrient.data.PeterPaul, row.names = FALSE, 
-          #file = "./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv")
+write.csv(NTL.nutrient.data.PeterPaul, row.names = FALSE, 
+          file = "./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv")
 
 # Remove columns that are not of interest for analysis
 NTL.phys.data.PeterPaul.subset <- select(NTL.phys.data.PeterPaul, 
