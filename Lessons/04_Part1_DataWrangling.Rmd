@@ -30,7 +30,7 @@ library(lubridate)
 
 #I needed to important data set through the files tab in the bottom right.
 
-#NTL.phys.data<-read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv", stringsAsFactors = TRUE)
+NTL.phys.data <- NTL_LTER_Lake_ChemistryPhysics_Raw
 
 colnames(NTL.phys.data)
 head(NTL.phys.data)
@@ -66,14 +66,14 @@ vignette("dplyr")
 Filtering allows us to choose certain rows (observations) in our dataset.
 
 Here are the relevant commands used in the `filter` function. Add some notes to designate what these commands mean. 
-`==`
-`!=`
-`<`
-`<=`
-`>`
-`>=`
-`&`
-`|`
+`==` #Compare value to specific value
+`!=` #Check if values are different
+`<` #Less than
+`<=` #Less than or equal to
+`>` #Greater than
+`>=` #Greater than or equal to
+`&` #If you want two filters to both be true at the same time, use &
+`|` #If you want one OR another filter to be true, use |
 
 ```{r filtering data}
 class(NTL.phys.data$lakeid)
@@ -93,6 +93,8 @@ head(NTL.phys.data.surface2)
 dim(NTL.phys.data.surface2)
 head(NTL.phys.data.surface3)
 dim(NTL.phys.data.surface3)
+
+#Filters only impact the rows, not the columns
 
 # Choose multiple conditions to filter
 summary(NTL.phys.data$lakename)
@@ -115,34 +117,53 @@ NTL.phys.data.JunethruOctober4 <- filter(NTL.phys.data, daynum %in% c(152:304))
 # what code do you need to use, based on the class of the variable?
 class(NTL.phys.data$year4)
 
+NTL.phys.data.1999 <- filter(NTL.phys.data, year4 == 1999)
+
+head(NTL.phys.data.1999)
+
 # Exercise: 
 # filter NTL.phys.data for Tuesday Lake from 1990 through 1999.
 
+NTL.phys.data.TuesdayLake <- filter(NTL.phys.data, lakename == "Tuesday Lake" & year4 >= 1990 & year4 <= 1999)
+
+head(NTL.phys.data.TuesdayLake)
 
 ```
 Question: Why don't we filter using row numbers?
 
-> Answer: 
+> Answer: The data in a row number can change, which would skew our results. For example, if we reorder the Raw Data into alphabetical order, but we do not change the row numbers in our code, then the data sets in our code will return the wrong rows.
 
 ### Arrange
 
 Arranging allows us to change the order of rows in our dataset. By default, the arrange function will arrange rows in ascending order.
 
 ```{r arranging data}
+
+#Default is ascending order
+
 NTL.phys.data.depth.ascending <- arrange(NTL.phys.data, depth)
 NTL.phys.data.depth.descending <- arrange(NTL.phys.data, desc(depth))
 
 # Exercise: 
 # Arrange NTL.phys.data by temperature, in descending order. 
-# Which dates, lakes, and depths have the highest temperatures?
+
+NTL.phys.data.temp.descending <- arrange(NTL.phys.data, desc(temperature_C))
+
+head(NTL.phys.data.temp.descending)
 
 
 ```
+
+Which dates, lakes, and depths have the highest temperatures?
+
+> Answer: East Long Lake and Hummingbird Lake have the highest temperatures, from 34 degrees Celsius to 28 degrees Celsius.
+
 ### Select
 
 Selecting allows us to choose certain columns (variables) in our dataset.
 
 ```{r selecting columns}
+
 NTL.phys.data.temps <- select(NTL.phys.data, lakename, sampledate:temperature_C)
 
 ```
@@ -184,6 +205,8 @@ NTL.phys.data.processed <-
   filter(lakename == "Paul Lake" | lakename == "Peter Lake") %>%
   select(lakename, sampledate:temperature_C) %>%
   mutate(temperature_F = (temperature_C*9/5) + 32)
+
+NTL.phys.data.processed
   
 ```
 
@@ -192,11 +215,17 @@ Notice that we did not place the dataset name inside the wrangling function but 
 ### Saving processed datasets
 
 ```{r exporting data}
-write.csv(NTL.phys.data.PeterPaul1, row.names = FALSE, file = "./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv")
+
+write.csv(NTL.phys.data.PeterPaul1, row.names = FALSE)
+
+write.csv(NTL.phys.data.PeterPaul1, row.names = FALSE, file = "./Data/Processed/NTL_LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv")
+
+
 ```
 
 ## Closing Discussion
 
 When we wrangle a raw dataset into a processed dataset, we create a code file that contains only the wrangling code. We then save the processed dataset as a new spreadsheet and then create a separate code file to analyze and visualize the dataset. Why do we keep the wrangling code separate from the analysis code?
 
-
+>Answer: This ensures that the data is not accidentally corrupted, changed, or deleted during the analysis process.
+It also makes data analysis reproducible and readable.
