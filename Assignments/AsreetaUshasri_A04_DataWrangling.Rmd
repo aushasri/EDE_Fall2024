@@ -30,18 +30,51 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Wr
 2. Add the appropriate code to reveal the dimensions of the four datasets. 
 
 ```{r setup, message = FALSE}
-#1a 
 
-#1b 
+#1a Install packages tidyverse, lubridate, here. 
 
-#1c 
+#install.packages("tidyverse")
+#install.packages("lubridate")
+#install.packages("here")
 
-#2 
+library(tidyverse)
+library(lubridate)
+library(here)
 
+#1b Check working directory
+
+getwd()
+
+#1c Add four data sets to global environment.
+
+O3_NC2018 <- read.csv(
+file = here("./Data/Raw/EPAair_O3_NC2018_raw.csv"),
+stringsAsFactors = TRUE)
+
+O3_NC2019 <- read.csv(
+file = here("./Data/Raw/EPAair_O3_NC2019_raw.csv"),
+stringsAsFactors = TRUE)
+
+PM25_NC2018 <- read.csv(
+file = here("./Data/Raw/EPAair_PM25_NC2018_raw.csv"),
+stringsAsFactors = TRUE)
+
+PM25_NC2019 <- read.csv(
+file = here("./Data/Raw/EPAair_PM25_NC2019_raw.csv"),
+stringsAsFactors = TRUE)
+
+#2 Check the dimensions of each data set.
+
+dim(O3_NC2018)
+dim(O3_NC2019)
+dim(PM25_NC2018)
+dim(PM25_NC2019)
 
 ```
 
->All four datasets should have the same number of columns but unique record counts (rows). Do your datasets follow this pattern?
+All four datasets should have the same number of columns but unique record counts (rows). Do your datasets follow this pattern?
+
+>Answer: Yes, these data sets all have 20 columns. However, the number of rows is different for each data set.
 
 
 ## Wrangle individual datasets to create processed files.
@@ -55,16 +88,61 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Wr
 6. Save all four processed datasets in the Processed folder. Use the same file names as the raw files but replace "raw" with "processed".
 
 ```{r questions 3 thru 4}
-#3
+
+#3 Check the format of the date columns again
+
+#view(O3_NC2018)
+#view(O3_NC2019)
+#view(PM25_NC2018)
+#view(PM25_NC2019)
+
+#Use the as.Date function to change to date objects.
+
+O3_NC2018$Date <- as.Date(O3_NC2018$Date, format = "%m/%d/%Y")
+O3_NC2019$Date <- as.Date(O3_NC2019$Date, format = "%m/%d/%Y")
+PM25_NC2018$Date <- as.Date(PM25_NC2018$Date, format = "%m/%d/%Y")
+PM25_NC2019$Date <- as.Date(PM25_NC2019$Date, format = "%m/%d/%Y")
 
 
-#4
+#4 Select columns in table, use select function
+
+O3_NC2018 <- select(O3_NC2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+O3_NC2019 <- select(O3_NC2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+PM25_NC2018 <- select(PM25_NC2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+PM25_NC2019 <- select(PM25_NC2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
 
-#5
+#5 Fill all cells in AQS_PARAMETER_DESC with "PM2.5"
+
+#First, view the tables with the updated columns
+
+#view(PM25_NC2018)
+#view(PM25_NC2019)
+
+#Now, use the mutate function to change the cell values.
+
+PM25_NC2018 <- mutate(PM25_NC2018, AQS_PARAMETER_DESC = "PM2.5")
+
+PM25_NC2019 <- mutate(PM25_NC2019, AQS_PARAMETER_DESC = "PM2.5")
+
+#View the data again to make sure the cells have changed correctly.
+
+#view(PM25_NC2018)
+#view(PM25_NC2019)
 
 
-#6
+#6 Save all four processed datasets in the Processed folder. Use the write.csv function.
+
+write.csv(O3_NC2018, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2018_Processed.csv")
+
+write.csv(O3_NC2019, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2019_Processed.csv")
+
+write.csv(PM25_NC2018, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_NC2018_Processed.csv")
+
+write.csv(PM25_NC2019, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_NC2019_Processed.csv")
 
 ```
 
@@ -97,19 +175,80 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Wr
 11. Save your processed dataset with the following file name: "EPAair_O3_PM25_NC1819_Processed.csv"
 
 ```{r questions 7 thru 11}
-#7 
+
+#7 Combine data frames
+#First, read in processed data
+
+O3_NC2018_Processed <- read.csv( "./Data/Processed/EPAair_O3_NC2018_Processed.csv")
+
+O3_NC2019_Processed <- read.csv( "./Data/Processed/EPAair_O3_NC2019_Processed.csv")
+
+PM25_NC2018_Processed <- read.csv( "./Data/Processed/EPAair_PM25_NC2018_Processed.csv")
+
+PM25_NC2019_Processed <- read.csv( "./Data/Processed/EPAair_PM25_NC2019_Processed.csv")
+
+#Check if columns are identical
+
+#view(O3_NC2018_Processed)
+#view(O3_NC2019_Processed)
+#view(PM25_NC2018_Processed)
+#view(PM25_NC2019_Processed)
+
+#Then, use rbind to combine data frames
+
+O3_PM25_NC1819 <- rbind(O3_NC2018_Processed, O3_NC2019_Processed, PM25_NC2018_Processed, PM25_NC2019_Processed)
+
+#8 Wrangle your new dataset with a pipe function (%>%) so that it includes only sites that the four data frames have in common.
+
+#"Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School"
+
+O3_PM25_NC1819_Sites <-
+  O3_PM25_NC1819 %>% 
+  filter(Site.Name == "Linville Falls" |
+           Site.Name == "Durham Armory" |
+           Site.Name == "Leggett" |
+           Site.Name == "Hattie Avenue" |
+           Site.Name == "Clemmons Middle" |
+           Site.Name == "Mendenhall School" |
+           Site.Name == "Frying Pan Mountain" |
+           Site.Name == "West Johnston Co." |
+           Site.Name == "Garinger High School" |
+           Site.Name == "Castle Hayne" |
+           Site.Name == "Pitt Agri. Center" |
+           Site.Name == "Bryson City" |
+           Site.Name == "Millbrook School") %>% 
+  group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
+    summarise(Mean.DAILY.AQI = mean(DAILY_AQI_VALUE), 
+            Mean.LATITUDE = mean(SITE_LATITUDE),
+            Mean.LONGITUDE = mean(SITE_LONGITUDE))
+
+O3_PM25_NC1819_Sites <- mutate(O3_PM25_NC1819_Sites, Month = month(Date))
+
+O3_PM25_NC1819_Sites <- mutate(O3_PM25_NC1819_Sites, Year = year(Date))
+
+#Check data frame using view and dim
+
+view(O3_PM25_NC1819_Sites)
+dim(O3_PM25_NC1819_Sites)
 
 
-#8 
+#9 Use the pivot wider operation to spread data.
+
+O3_PM25_NC1819_Sites_Spread <-
+  pivot_wider(O3_PM25_NC1819_Sites, names_from = AQS_PARAMETER_DESC, values_from = Mean.DAILY.AQI)
+
+#Check the dataset using view
+
+#view(O3_PM25_NC1819_Sites_Spread)
 
 
-#9
+#10 Determine dimensions of new sheet
 
+dim(O3_PM25_NC1819_Sites_Spread)
 
-#10
+#11 Save processed data as csv
 
-
-#11
+write.csv(O3_PM25_NC1819_Sites_Spread, row.names = FALSE, file = "./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
 
 
 ```
@@ -125,10 +264,30 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Wr
 
 #12
 
+O3_PM25_NC1819_Processed <-
+  O3_PM25_NC1819_Sites_Spread %>% 
+    group_by(Site.Name, Month, Year) %>%
+    summarise(PM2.5 = mean(PM2.5),
+              Ozone = mean(Ozone)) %>%
+     drop_na(PM2.5) %>% drop_na(Ozone)
 
-#13
+view(O3_PM25_NC1819_Processed)
 
 
+#13 Call upon the dimensions of this data set.
+
+dim(O3_PM25_NC1819_Processed)
+
+#14
+
+O3_PM25_NC1819_Processed_Trial <-
+  O3_PM25_NC1819_Sites_Spread %>% 
+    group_by(Site.Name, Month, Year) %>%
+    summarise(PM2.5 = mean(PM2.5),
+              Ozone = mean(Ozone)) %>%
+     na.omit(PM2.5) %>% na.omit(Ozone)
+
+dim(O3_PM25_NC1819_Processed_Trial)
 
 ```
 
