@@ -228,7 +228,7 @@ O3_PM25_NC1819_Sites <- mutate(O3_PM25_NC1819_Sites, Year = year(Date))
 
 #Check data frame using view and dim
 
-view(O3_PM25_NC1819_Sites)
+#view(O3_PM25_NC1819_Sites)
 dim(O3_PM25_NC1819_Sites)
 
 
@@ -269,10 +269,9 @@ O3_PM25_NC1819_Processed <-
     group_by(Site.Name, Month, Year) %>%
     summarise(PM2.5 = mean(PM2.5),
               Ozone = mean(Ozone)) %>%
-     drop_na(PM2.5) %>% drop_na(Ozone)
+     drop_na(PM2.5)
 
-view(O3_PM25_NC1819_Processed)
-
+#view(O3_PM25_NC1819_Processed)
 
 #13 Call upon the dimensions of this data set.
 
@@ -285,7 +284,7 @@ O3_PM25_NC1819_Processed_Trial <-
     group_by(Site.Name, Month, Year) %>%
     summarise(PM2.5 = mean(PM2.5),
               Ozone = mean(Ozone)) %>%
-     na.omit(PM2.5) %>% na.omit(Ozone)
+     na.omit(PM2.5)
 
 dim(O3_PM25_NC1819_Processed_Trial)
 
@@ -293,5 +292,5 @@ dim(O3_PM25_NC1819_Processed_Trial)
 
 14. Why did we use the function `drop_na` rather than `na.omit`? Hint: replace `drop_na` with `na.omit` in part 12 and observe what happens with the dimensions of the summary date frame.
 
-> Answer: 
+> Answer: The drop_na function restricts N/A in the PM2.5 column only, giving 211 rows. The na.omit function omits all N/A values from PM2.5 and Ozone, which leaves only 101 rows. In this case, we want to omit only the N/A from the PM2.5 column, but we want to continue to include the N/A from the Ozone column. The operation drop_na allows us to drop values from one specific column, and maintain the N/A values in the other column.
 
