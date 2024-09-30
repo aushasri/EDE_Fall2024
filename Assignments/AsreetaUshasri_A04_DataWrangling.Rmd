@@ -300,7 +300,7 @@ write.csv(O3_PM25_NC1819_Sites_Spread, row.names = FALSE,
 
 ```{r questions 12 and 13}
 
-#12
+#12 Split, Apply, Combine Strategy
 
 O3_PM25_NC1819_Processed <-
   O3_PM25_NC1819_Sites_Spread %>% 
@@ -315,7 +315,7 @@ O3_PM25_NC1819_Processed <-
 
 dim(O3_PM25_NC1819_Processed)
 
-#14
+#14 Compare drop_na to na.omit
 
 O3_PM25_NC1819_Processed_Trial <-
   O3_PM25_NC1819_Sites_Spread %>% 
