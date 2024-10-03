@@ -19,16 +19,19 @@ Effective data visualization depends on purposeful choices about graph types. Th
 ## Set Up
 
 ```{r, message = FALSE, warning = FALSE}
-library(tidyverse);library(lubridate);library(here)
+library(tidyverse)
+library(lubridate)
+library(here)
+install.packages(ggridges)
 library(ggridges)
 
 here()
 
 PeterPaul.chem.nutrients <- 
-  read.csv(here("Data/Processed_KEY/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), stringsAsFactors = TRUE)
+  read.csv(here("Data/Processed/NTL_LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), stringsAsFactors = TRUE)
 PeterPaul.chem.nutrients.gathered <-
-  read.csv(here("Data/Processed_KEY/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv"), stringsAsFactors = TRUE)
-EPAair <- read.csv(here("Data/Processed_KEY/EPAair_O3_PM25_NC1819_Processed.csv"), stringsAsFactors = TRUE)
+  NTL_LTER_Lake_Nutrients_PeterPaulGathered_Processed
+EPAair <- EPAair_O3_PM25_NC1819_Processed
 
 EPAair$Date <- ymd(EPAair$Date)
 PeterPaul.chem.nutrients$sampledate <- ymd(PeterPaul.chem.nutrients$sampledate)
