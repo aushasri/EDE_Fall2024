@@ -345,7 +345,7 @@ ggplot(data = Litter_Needles,
   labs(
     title = "Dry Mass of Needles Litterfall at NEON Sites",
     x = "Sample Collection Date",
-    y = "Dry Mass",
+    y = "Dry Mass (Grams)",
     color = "NLCD Class") +
   theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
 
@@ -363,7 +363,7 @@ ggplot(data = Litter_Needles,
   labs(
     title = "Dry Mass of Needles Litterfall at NEON Sites",
     x = "Sample Collection Date",
-    y = "Dry Mass") +
+    y = "Dry Mass (Grams)") +
   theme(axis.text.x =
           element_text(angle = 60,
                        vjust = 1, hjust=1))
