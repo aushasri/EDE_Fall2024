@@ -2,13 +2,25 @@
 title: Interactive Rmd
 output: html_document
 runtime: shiny
+#runtime shiny says this is an app, not a document (no knitting)
+
 ---
   
 ```{r, echo = FALSE}
-numericInput("n",
-"How many cars?", 5)
+numericInput(
+  inputId = "n",
+  "How many cars?",
+  5)
+
+numericInput(
+  inputId = "x",
+  "Tell me how many cars",
+  value=5)
+
 renderTable({
 head(cars, input$n)
+  
 })
+
 ```
 

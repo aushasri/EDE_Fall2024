@@ -22,11 +22,11 @@ RMarkdown is a powerful tool for creating dynamic documents that combine code, t
 
 ```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
 #Load packages
-library(tidyverse);library(here);library(lubridate)
+library(tidyverse);library(here);library(lubridate);library(shiny)
 
 #Load data
 nutrient_data <- read.csv(
-  here('Data/Processed_KEY','NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv'),
+  here('Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv'),
   stringsAsFactors = TRUE)
 
 #Fix dates
@@ -71,6 +71,9 @@ my_plot <- nutrient_data %>%
     option = "mako", 
     guide = guide_colorbar(reverse = T),
     direction = -1)
+
+
+# scale_shape_manual changes the shape of the objects
 
 #View the plot
 my_plot
@@ -154,7 +157,7 @@ plot_it <- function(the_parameter,start_year,end_year){
 }
 
 #Now run the plot function
-plot_it('tn_ug',1995,2005)
+plot_it('po4',1990,2000)
 ```
 
 
