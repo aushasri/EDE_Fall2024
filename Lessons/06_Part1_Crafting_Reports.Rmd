@@ -7,6 +7,8 @@ output:  ioslides_presentation
 ---
 
 ## Learning Outcomes
+### Sub-header
+
 -   Explain why we use RMarkdown & knit to PDF
 -   Navigate YAML & use it to enhance to your documents
 -   Control how *code* appears in knit output:\

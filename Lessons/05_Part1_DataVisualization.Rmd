@@ -76,8 +76,12 @@ Here are some commonly used aesthetic types that can be manipulated in ggplot:
 * shape
 * size
 * transparency
+* First Bullet
+  * Sub-bullet
 
 ### Plotting continuous variables over time: Scatterplot and Line Plot
+
+\List of Figures
 
 ```{r, fig.height = 3, fig.width = 4, warning = FALSE}
 # Scatterplot
