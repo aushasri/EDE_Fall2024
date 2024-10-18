@@ -132,7 +132,7 @@ Below this paragraph, but above the horizonal line (`---`), create two separate 
 
 \newpage
 
-```{r boxplot.2018, warning=FALSE, echo=FALSE,  fig.align='left', fig.cap = '2019 Monthly Ozone Levels', fig.height=2.85}
+```{r boxplot.2018, warning=FALSE, echo=FALSE,  fig.align='left', fig.cap = '2018 Monthly Ozone Levels', fig.height=2.85}
 
 #Plot Ozone for 2018 from epa_data
 #Use factor for Month to add the Month Abbreviation Labels
