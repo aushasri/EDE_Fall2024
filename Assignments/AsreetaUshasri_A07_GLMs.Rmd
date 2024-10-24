@@ -103,11 +103,12 @@ Ha: There is a relationship between the variables of mean lake temperature in Ju
 
 ```{r scatterplot}
 #4 Wrangle Data for July with specific columns and no N/As
+NTL_July <- NTL_Raw %>% 
+  
 
 
 
-
-#5 Create scatterplot and linear model
+#5 Create scatter plot and linear model
 
 
 ```
