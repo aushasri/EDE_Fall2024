@@ -26,10 +26,61 @@ This exercise accompanies the lessons in Environmental Data Analytics on general
 2. Build a ggplot theme and set it as your default theme.
 
 ```{r setup2}
-#1
+#1 Install Packages
+
+#install.packages("tidyverse")
+#install.packages("agricolae")
+#install.packages("lubridate")
+#install.packages("cowplot")
+#install.packages("viridisLite")
 
 
-#2
+#Load packages
+
+library(tidyverse)
+library(lubridate)
+library(agricolae)
+library(cowplot)
+library(here)
+library(knitr)
+library(viridis)
+library(RColorBrewer)
+library(colormap)
+library(ggthemes)
+
+#Check working directory
+
+getwd()
+
+#Import NTL Lake Data
+
+NTL_Raw <- read.csv(
+  here("Data", "Raw","NTL-LTER_Lake_ChemistryPhysics_Raw.csv"),
+  stringsAsFactors = TRUE)
+
+#view(NTL_Raw)
+
+#2 Create a custom theme
+my_theme <- theme_tufte() +
+theme(
+  
+#Text Color
+  plot.title = element_text("black"),
+  axis.title.x = element_text("black"),
+  axis.title.y = element_text("black"),
+  axis.text = element_text("darkgray"),
+
+#Line Color
+  panel.grid.major = element_line("lightblue"),
+  panel.grid.minor = element_line("lightblue"),
+
+#Rectangle Element
+  panel.background = element_rect("white"),
+  legend.key = element_rect("white"),
+
+#Legend Position
+  legend.position = 'bottom',
+complete = TRUE)
 
 
 ```
@@ -39,8 +90,8 @@ Our first research question is: Does mean lake temperature recorded during July 
 
 3. State the null and alternative hypotheses for this question:
 > Answer:
-H0: 
-Ha: 
+H0: There is no correlation between mean lake temperature in July and lake depth.
+Ha: There is a relationship between the variables of mean lake temperature in July and lake depth.
 
 
 4.  Wrangle your NTL-LTER dataset with a pipe function so that the records meet the following criteria: 
@@ -51,10 +102,12 @@ Ha:
 5. Visualize the relationship among the two continuous variables with a scatter plot of temperature by depth. Add a smoothed line showing the linear model, and limit temperature values from 0 to 35 °C. Make this plot look pretty and easy to read.
 
 ```{r scatterplot}
-#4
+#4 Wrangle Data for July with specific columns and no N/As
 
 
-#5
+
+
+#5 Create scatterplot and linear model
 
 
 ```
