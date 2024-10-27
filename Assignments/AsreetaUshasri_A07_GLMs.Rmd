@@ -103,13 +103,50 @@ Ha: There is a relationship between the variables of mean lake temperature in Ju
 
 ```{r scatterplot}
 #4 Wrangle Data for July with specific columns and no N/As
+
+NTL_Raw$sampledate <-
+  as.Date(NTL_Raw$sampledate, format = "%m/%d/%y")
+
+NTL_Raw <- NTL_Raw %>%
+  mutate(month = month(sampledate))
+
+#view(NTL_Raw)
+
 NTL_July <- NTL_Raw %>% 
-  
+  filter(month == "7") %>%
+  select(`lakename`, `year4`, `daynum`,
+         `depth`, `temperature_C`) %>%
+  drop_na(temperature_C)
 
-
+#view(NTL_July)
 
 #5 Create scatter plot and linear model
 
+NTL_July_Scatterplot_LakeName <-
+  ggplot(data = NTL_July,
+       aes(x = depth,
+           y = temperature_C,
+           color = lakename)) +
+  geom_point() +
+  labs(
+    title = "Depth and Temperature of North Wisconsin Lakes in July",
+    x = "Depth of Lake (Meters)",
+    y = "Temperature (Celsius)",
+    color = "Lake Name") +
+  my_theme + theme(axis.title.y =
+             element_text(angle = 90))
+
+NTL_July_Scatterplot_BW <-
+  ggplot(data = NTL_July,
+       aes(x = depth,
+           y = temperature_C)) +
+  geom_point() +
+  labs(
+    title = "Depth and Temperature of North Wisconsin Lakes in July",
+    x = "Depth of Lake (Meters)",
+    y = "Temperature (Celsius)") +
+  my_theme + theme(axis.title.y =
+             element_text(angle = 90))
 
 ```
 
