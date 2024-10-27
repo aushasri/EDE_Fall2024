@@ -21,7 +21,7 @@ library(agricolae)   #you may need to install/update package "htmltools" before 
 library(here)
 here()
 
-Litter <- read.csv(here("Data/Processed_KEY/NEON_NIWO_Litter_mass_trap_Processed.csv"), stringsAsFactors = TRUE)
+Litter <- read.csv(here("Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv"), stringsAsFactors = TRUE)
 
 # Set date to date format
 Litter$collectDate <- as.Date(Litter$collectDate , format = "%Y-%m-%d")
