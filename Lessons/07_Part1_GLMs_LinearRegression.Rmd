@@ -44,7 +44,7 @@ options(scipen = 4)
 library(here)
 here()
 
-PeterPaul.chem.nutrients <- read.csv(here("Data/Processed_KEY/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), stringsAsFactors = TRUE)
+PeterPaul.chem.nutrients <- read.csv(here("Data/Processed/NTL_LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), stringsAsFactors = TRUE)
 
 # Set theme
 mytheme <- theme_classic(base_size = 14) +

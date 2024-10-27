@@ -71,8 +71,8 @@ theme(
   axis.text = element_text("darkgray"),
 
 #Line Color
-  panel.grid.major = element_line("lightblue"),
-  panel.grid.minor = element_line("lightblue"),
+  panel.grid.major = element_line("lightgray"),
+  panel.grid.minor = element_line("lightgray"),
 
 #Rectangle Element
   panel.background = element_rect("white"),
@@ -134,32 +134,51 @@ NTL_July_Scatterplot_LakeName <-
     y = "Temperature (Celsius)",
     color = "Lake Name") +
   my_theme + theme(axis.title.y =
-             element_text(angle = 90))
+             element_text(angle = 90)) +
+  ylim(0, 35) +
+  geom_smooth(method = lm,
+              se=FALSE)
+
+print(NTL_July_Scatterplot_LakeName)
 
 NTL_July_Scatterplot_BW <-
   ggplot(data = NTL_July,
        aes(x = depth,
            y = temperature_C)) +
-  geom_point() +
+  geom_point(colour = "black", size = 0.65) +
   labs(
     title = "Depth and Temperature of North Wisconsin Lakes in July",
     x = "Depth of Lake (Meters)",
     y = "Temperature (Celsius)") +
   my_theme + theme(axis.title.y =
-             element_text(angle = 90))
+             element_text(angle = 90))  +
+  ylim(0, 35) +
+  geom_smooth(method = lm,
+              se=FALSE, colour="blue")
+
+print(NTL_July_Scatterplot_BW)
 
 ```
 
 
 6. Interpret the figure. What does it suggest with regards to the response of temperature to depth? Do the distribution of points suggest about anything about the linearity of this trend?
 
-> Answer: 
+> Answer: The scatterplot showcases a weak negative correlation between lake depth and temperature. This means that as lake depth increases, the temperature of the water decreases. The scatterplot does not match the linear model perfectly - there appears to be a cluster of data from the depth of 0 to 10 meters. Within this depth, the temperature of the lake ranges from 5 to 25 degrees Celsius. The scatterplot displays a large amount of deviation from the linear model in this range, indicating that the relationship between lake depth and temperature may not be linear. However, both the scatterplot and linear model indicate a potential negative correlation.
 
 
 7. Perform a linear regression to test the relationship and display the results.
 
 ```{r linear.regression}
-#7
+#7 Linear regression
+
+depth.temp.regression <- 
+  lm(NTL_July$depth ~ 
+       NTL_July$temperature_C)
+
+summary(depth.temp.regression)
+
+cor.test(NTL_July$depth,
+         NTL_July$temperature_C)
 
 
 ```
