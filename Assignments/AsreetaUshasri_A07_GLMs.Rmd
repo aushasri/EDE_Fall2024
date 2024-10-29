@@ -167,8 +167,11 @@ cor.test(NTL_July$depth,
 
 8. Interpret your model results in words. Include how much of the variability in temperature is explained by changes in depth, the degrees of freedom on which this finding is based, and the statistical significance of the result. Also mention how much temperature is predicted to change for every 1m change in depth. 
 
-> Answer:
+> Answer: The correlation of these variables is -0.8595. The linear model estimates that if the depth of the lake increase by one meter, the temperature will decrease by 0.8595 degrees Celsius. There is a 95 % confidence interval that the correlation is within -0.8646 and -0.8542. This means that if this experiment was replicated multiple times, the slope of the line of best fit of the different samples would be within the range of -0.8646 and -0.8542 for 95 % of the experiments. This is a small range of variability in the expected temperature drop for each meter of lake depth. For every increase in one meter of lake depth, the lake temperature is expected to drop 0.8595 degrees Celsius, plus or minus 0.0051 degrees Celsius (with a 95% confidence level). 
 
+>  The degrees of freedom in this model is 9726. The degrees of freedom is typically one value less than the sample size analyzed in the study. In this case, 9728 data points of lake depth and temperature in July were analyzed to create a line of best fit for the correlation.
+
+> The p-value of this linear model is less than 0.05 (estimated at 2.2e-16). The p-value is the probability that the null hypothesis is true. If the p-value is less than 0.05, that means there is less than a 5% probability that the null hypothesis is true. This is a statistically signifcant threshold, and would lead the researchers to reject the null hypothesis. In this case, there is statistical significance that indicates a negative correlation does exist between these two variables. The null hypothesis is rejected because the p-value is less than 0.05, and the alternative hypothesis is accepted.
 
 ---
 
@@ -188,18 +191,20 @@ TPAIC <- lm(data = NTL_July, temperature_C ~
 
 step(TPAIC)
 
-#10
+#10 Create a multiple regression model
 
-TPmodel <- lm(data = Pau, tp_ug ~ dissolvedOxygen + temperature_C + tn_ug)
-summary(TPmodel)
+NTL_July_MultiRegression_Model <-
+  lm(data = NTL_July, temperature_C ~
+       year4 + daynum + depth)
+
+summary(NTL_July_MultiRegression_Model)
 
 
 ```
 
 11. What is the final set of explanatory variables that the AIC method suggests we use to predict temperature in our multiple regression? How much of the observed variance does this model explain? Is this an improvement over the model using only depth as the explanatory variable?
 
-> Answer: 
-
+> Answer: The AIC method recommends predicting temperature by using the year, the day number, and the depth variables. This suggests using three variables to predict temperature instead of one variables (lake depth).
 
 
 ---
@@ -222,14 +227,15 @@ summary(NTL_July.anova.lm)
 
 13. Is there a significant difference in mean temperature among the lakes? Report your findings. 
 
-> Answer: 
+> Answer: There is a difference in the mean temperature among the lakes, showcased by the differences in the mean estimates. Certain lakes had large variation from the mean of the entire North Temperate Lake System. For example, Crampton Lake is estimated to have a mean temperature which is 4.53 degrees Celsius higher than the mean of the entire lake system. Hummingbird Lake has a mean temperature which is 4.87 degrees lower than the mean temperature of the entire lake system.
 
+> The p-value for almost all of the lakes is less than 0.05, thus the null hypothesis would be rejected for these lakes. For most of the lakes, the model indicates with statistical significance that a correlation exists between lake depth and temperature in July. The only two lakes that do not meet this criteria are Ward Lake and West Long Lake. The p-value of Ward Lake is 0.13967 and the p-value of West Long Lake is 0.60938. These values are above 0.05, which means the null hypothesis cannot be rejected for these two lakes.
 
 
 14. Create a graph that depicts temperature by depth, with a separate color for each lake. Add a geom_smooth (method = "lm", se = FALSE) for each lake. Make your points 50 % transparent. Adjust your y axis limits to go from 0 to 35 degrees. Clean up your graph to make it pretty. 
 
 ```{r scatterplot.2}
-#14.
+#14. Graph temperature by depth in each lake
 
 NTL_July_Scatterplot_LakeName <-
   ggplot(data = NTL_July,
