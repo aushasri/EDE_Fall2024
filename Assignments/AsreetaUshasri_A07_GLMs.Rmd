@@ -1,10 +1,12 @@
 ---
-title: "Assignment 7: GLMs (Linear Regressios, ANOVA, & t-tests)"
+title: "Assignment 7: GLMs (Linear Regressions, ANOVA, & t-tests)"
 author: "Asreeta Ushasri"
 date: "Fall 2024"
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
 geometry: margin=2.54cm
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -61,26 +63,27 @@ NTL_Raw <- read.csv(
 #view(NTL_Raw)
 
 #2 Create a custom theme
-my_theme <- theme_tufte() +
-theme(
+my_theme <- theme_classic() + theme(
   
 #Text Color
-  plot.title = element_text("black"),
-  axis.title.x = element_text("black"),
-  axis.title.y = element_text("black"),
-  axis.text = element_text("darkgray"),
+  plot.title = element_text(color = "black"),
+  axis.title.x = element_text(color = "black"),
+  axis.title.y = element_text(color = "black"),
+  axis.text = element_text(color = "darkgray"),
 
 #Line Color
-  panel.grid.major = element_line("lightgray"),
-  panel.grid.minor = element_line("lightgray"),
+  panel.grid.major = element_line(color = "lightgray"),
+  panel.grid.minor = element_line(color = "lightgray"),
 
 #Rectangle Element
-  panel.background = element_rect("white"),
-  legend.key = element_rect("white"),
+  panel.background = element_rect(color = "white"),
+  legend.key = element_rect(color = "white"),
 
 #Legend Position
-  legend.position = 'bottom',
+  legend.position = 'right',
 complete = TRUE)
+
+theme_set(my_theme)
 
 
 ```
@@ -101,7 +104,7 @@ Ha: There is a relationship between the variables of mean lake temperature in Ju
 
 5. Visualize the relationship among the two continuous variables with a scatter plot of temperature by depth. Add a smoothed line showing the linear model, and limit temperature values from 0 to 35 °C. Make this plot look pretty and easy to read.
 
-```{r scatterplot}
+```{r scatterplot, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 #4 Wrangle Data for July with specific columns and no N/As
 
 NTL_Raw$sampledate <-
@@ -130,36 +133,34 @@ NTL_July_Scatterplot_BW <-
   labs(
     title = "Depth and Temperature of North Wisconsin Lakes in July",
     x = "Depth of Lake (Meters)",
-    y = "Temperature (Celsius)") +
-  my_theme + theme(axis.title.y =
+    y = "Temperature (Celsius)") + 
+  theme(axis.title.y =
              element_text(angle = 90))  +
   ylim(0, 35) +
   geom_smooth(method = lm,
               se=FALSE, colour="blue")
 
-print(NTL_July_Scatterplot_BW)
+NTL_July_Scatterplot_BW
 
 ```
 
 
 6. Interpret the figure. What does it suggest with regards to the response of temperature to depth? Do the distribution of points suggest about anything about the linearity of this trend?
 
-> Answer: The scatterplot showcases a negative correlation between lake depth and temperature. This means that as lake depth increases, the temperature of the water decreases. The scatterplot does not match the linear model perfectly - there appears to be a cluster of data from the depth of 0 to 10 meters. Within this depth, the temperature of the lake ranges from 5 to 25 degrees Celsius. The scatterplot displays a large amount of deviation from the linear model in this range, indicating that the relationship between lake depth and temperature may not be linear. However, both the scatterplot and linear model indicate a potential negative correlation.
+> Answer: The scatterplot showcases a negative correlation between lake depth and temperature. As lake depth increases, the temperature of the water decreases. The scatterplot does not match the linear model perfectly - there appears to be a cluster of data from the depth of 0 to 10 meters. Within this depth, the temperature of the lake ranges from 5 to 25 degrees Celsius. The scatterplot displays deviation from the linear model in this range, indicating that the relationship between lake depth and temperature may not be linear. However, both the scatterplot and linear model indicate a potential negative correlation.
 
 
 7. Perform a linear regression to test the relationship and display the results.
 
-```{r linear.regression}
+```{r linear.regression, message=FALSE, warning=FALSE}
 #7 Linear regression
 
 depth.temp.regression <- 
-  lm(NTL_July$depth ~ 
-       NTL_July$temperature_C)
+  lm(NTL_July$temperature_C ~ 
+       NTL_July$depth)
 
 summary(depth.temp.regression)
 
-cor.test(NTL_July$depth,
-         NTL_July$temperature_C)
 
 
 ```
@@ -167,11 +168,11 @@ cor.test(NTL_July$depth,
 
 8. Interpret your model results in words. Include how much of the variability in temperature is explained by changes in depth, the degrees of freedom on which this finding is based, and the statistical significance of the result. Also mention how much temperature is predicted to change for every 1m change in depth. 
 
-> Answer: The correlation of these variables is -0.8595. The linear model estimates that if the depth of the lake increase by one meter, the temperature will decrease by 0.8595 degrees Celsius. There is a 95 % confidence interval that the correlation is within -0.8646 and -0.8542. This means that if this experiment was replicated multiple times, the slope of the line of best fit of the different samples would be within the range of -0.8646 and -0.8542 for 95 % of the experiments. This is a small range of variability in the expected temperature drop for each meter of lake depth. For every increase in one meter of lake depth, the lake temperature is expected to drop 0.8595 degrees Celsius, plus or minus 0.0051 degrees Celsius (with a 95% confidence level). 
+> Answer: The correlation of these variables is -1.946. The linear model estimates that if the depth of the lake increase by one meter, the temperature will decrease by 1.946 degrees Celsius. The R-squared value is 0.7387. This indicates that 73.87% of the variability in temperature can be explained by changed in the lake depth.
 
->  The degrees of freedom in this model is 9726. The degrees of freedom is typically one value less than the sample size analyzed in the study. In this case, 9728 data points of lake depth and temperature in July were analyzed to create a line of best fit for the correlation.
+>  The degrees of freedom is 9726 on which the findings of the model are based. The degrees of freedom is related to the sample size analyzed in the study.
 
-> The p-value of this linear model is less than 0.05 (estimated at 2.2e-16). The p-value is the probability that the null hypothesis is true. If the p-value is less than 0.05, that means there is less than a 5% probability that the null hypothesis is true. This is a statistically signifcant threshold, and would lead the researchers to reject the null hypothesis. In this case, there is statistical significance that indicates a negative correlation does exist between these two variables. The null hypothesis is rejected because the p-value is less than 0.05, and the alternative hypothesis is accepted.
+> The p-value of this linear model is less than 0.05 (estimated at 2.2e-16). The p-value is the probability that the null hypothesis is true. If the p-value is less than 0.05, that means there is less than a 5% probability that the null hypothesis is true. This is a statistically signifcant threshold, and would lead the researchers to reject the null hypothesis. In this case, there is statistical significance that indicates a negative correlation does exist between these two variables. The null hypothesis is rejected because the p-value is less than 0.05.
 
 ---
 
@@ -183,7 +184,7 @@ Let's tackle a similar question from a different approach. Here, we want to expl
 
 10. Run a multiple regression on the recommended set of variables. 
 
-```{r temperature.model}
+```{r temperature.model, message=FALSE, warning=FALSE}
 #9 AIC to determine explanatory variables
 
 TPAIC <- lm(data = NTL_July, temperature_C ~
@@ -204,7 +205,7 @@ summary(NTL_July_MultiRegression_Model)
 
 11. What is the final set of explanatory variables that the AIC method suggests we use to predict temperature in our multiple regression? How much of the observed variance does this model explain? Is this an improvement over the model using only depth as the explanatory variable?
 
-> Answer: The AIC method recommends predicting temperature by using the year, the day number, and the depth variables. This suggests using three variables to predict temperature instead of one variables (lake depth).
+> Answer: The AIC method recommends predicting temperature by using the year, the day number, and the lake depth variables. This suggests using three variables to predict temperature instead of one variable (lake depth). The model with all three variables explains 74.12% of the variability in temperature, shown because the R-squared value is 0.7412. The model which compared only lake depth to temperature had an R-squared value of 0.7387, which means that 73.87% of the variability in temperature could be explained by lake depth. 74.12% is higher than 73.87%, indicating that the model with three variables (depth, day and year) is an improvement over the model with only depth as the explanatory variable. The new model with three variables has a 0.25% increase in the explanatory relationship.
 
 
 ---
@@ -212,29 +213,33 @@ summary(NTL_July_MultiRegression_Model)
 
 12. Now we want to see whether the different lakes have, on average, different temperatures in the month of July. Run an ANOVA test to complete this analysis. (No need to test assumptions of normality or similar variances.) Create two sets of models: one expressed as an ANOVA models and another expressed as a linear model (as done in our lessons).
 
-```{r anova.model}
+```{r anova.model, message=FALSE, warning=FALSE}
 #12 Anova Model
 
-NTL_July.anova.model <- aov(data = NTL_July, temperature_C ~ lakename * depth)
+NTL_July.anova.model <- aov(data = NTL_July,
+                            temperature_C ~ lakename)
+
 summary(NTL_July.anova.model)
 
 #Anova as Linear Model
 
-NTL_July.anova.lm <- lm(data = NTL_July, temperature_C ~ lakename + depth)
+NTL_July.anova.lm <- lm(data = NTL_July,
+                        temperature_C ~ lakename)
+
 summary(NTL_July.anova.lm)
 
 ```
 
 13. Is there a significant difference in mean temperature among the lakes? Report your findings. 
 
-> Answer: There is a difference in the mean temperature among the lakes, showcased by the differences in the mean estimates. Certain lakes had large variation from the mean of the entire North Temperate Lake System. For example, Crampton Lake is estimated to have a mean temperature which is 4.53 degrees Celsius higher than the mean of the entire lake system. Hummingbird Lake has a mean temperature which is 4.87 degrees lower than the mean temperature of the entire lake system.
+> Answer: There is a statistically significant difference in the mean temperature among the lakes, depicted by the p-value. In the Anova Model, the p-value is 2e-15, which is less than 0.05. This indicates the null hypothesis should be rejected. The null hypothesis is that there is no difference in mean temperature between lakes. Rejecting this hypothesis showcases that there is a statistically significant difference in temperature based on the lake
 
-> The p-value for almost all of the lakes is less than 0.05, thus the null hypothesis would be rejected for these lakes. For most of the lakes, the model indicates with statistical significance that a correlation exists between lake depth and temperature in July. The only two lakes that do not meet this criteria are Ward Lake and West Long Lake. The p-value of Ward Lake is 0.13967 and the p-value of West Long Lake is 0.60938. These values are above 0.05, which means the null hypothesis cannot be rejected for these two lakes.
+> The linear model format of the Anova describes each lake's variation from the mean. The p-values from all of the lakes are less than 0.05, which indicates that researchers can reject the null hypothesis. The lakes have a statistically significant difference in mean temperature. The linear model shows that comparing any lake to one other lake has a significantly different mean.
 
 
 14. Create a graph that depicts temperature by depth, with a separate color for each lake. Add a geom_smooth (method = "lm", se = FALSE) for each lake. Make your points 50 % transparent. Adjust your y axis limits to go from 0 to 35 degrees. Clean up your graph to make it pretty. 
 
-```{r scatterplot.2}
+```{r scatterplot.2, message=FALSE, warning=FALSE}
 #14. Graph temperature by depth in each lake
 
 NTL_July_Scatterplot_LakeName <-
@@ -242,9 +247,10 @@ NTL_July_Scatterplot_LakeName <-
        aes(x = depth,
            y = temperature_C,
            color = lakename)) +
-  geom_point(size = 0.01, alpha = 0.50) +
+  geom_point(size = 0.5, alpha = 0.50) +
   labs(
-    title = "Depth and Temperature of North Wisconsin Lakes in July",
+    title = "Depth and Temperature of
+    North Wisconsin Lakes in July",
     x = "Depth of Lake (Meters)",
     y = "Temperature (Celsius)",
     color = "Lake Name") +
@@ -260,30 +266,45 @@ print(NTL_July_Scatterplot_LakeName)
 
 15. Use the Tukey's HSD test to determine which lakes have different means.
 
-```{r tukey.test}
+```{r tukey.test, message=FALSE, warning=FALSE}
 #15 Tukey HSD test
 
 TukeyHSD(NTL_July.anova.model)
+
+HSD_Test_Lakenames <- HSD.test(NTL_July.anova.model, "lakename", group = T)
+print(HSD_Test_Lakenames)
 
 ```
 
 16.From the findings above, which lakes have the same mean temperature, statistically speaking, as Peter Lake? Does any lake have a mean temperature that is statistically distinct from all the other lakes?
 
->Answer:
+>Answer: Paul Lake and Ward Lake have the same mean level temperature as Peter Lake. The adjusted p-value of the Peter Lake-Paul Lake comparison in the Tukey HSD Test is 0.224, which is above 0.05. This means the null hypothesis (that the temperatures are the same) would not be rejected. Ward Lake-Peter Lake has an adjusted p-value of 0.783, which is also above 0.05. If the null hypothesis is that the mean lake temperatures are the same, then the null hypothesis would not be rejected for Ward Lake either.
 
+> None of the lakes have a statistically significant mean temperature from all of the other lakes. Every lake has at least one lake in which the p-adjusted value is above 0.05, which signifies that the average temperature is not statistically different. For example, Central Long Lake has a significantly different mean temperature from all of the lakes except for Crampton Lake, where the p-value is 0.066 (which is greater than 0.05.)
  
-
 17. If we were just looking at Peter Lake and Paul Lake. What's another test we might explore to see whether they have distinct mean temperatures? 
 
->Answer: 
-
+>Answer: For comparing two lakes, the two-sample T test (or two-variable T test) would be able to compare the mean temperatures of Peter Lake and Paul Lake. This test determines if the mean value of two independent subjects are the same or if there is a statistical difference in the average value of the subjects.
 
 
 18. Wrangle the July data to include only records for Crampton Lake and Ward Lake. Run the two-sample T-test on these data to determine whether their July temperature are same or different. What does the test say? Are the mean temperatures for the lakes equal? Does that match you answer for part 16?
 
-```{r t.test}
+```{r t.test, message=FALSE, warning=FALSE}
+NTL_July_Crampton_Ward <-
+  NTL_July %>%
+  filter(lakename == "Crampton Lake" |
+           lakename == "Ward Lake")
+
+#Two-sample test
+NTL_July_Crampton_Ward.twosample <-
+  t.test(NTL_July_Crampton_Ward$temperature_C ~
+           NTL_July_Crampton_Ward$lakename)
+
+NTL_July_Crampton_Ward.twosample
 
 
 ```
 
->Answer: 
+>Answer: In a two-sample T-test, the null hypothesis states that there is no difference in the means between two groups of data. In other words, the mean of sample one is the same as the mean from sample two. Examining Crampton Lake and Ward Lake, the p-value of the two-sample T-test is 0.2649. This p-value is above 0.05. In this case, the null hypothesis cannot be rejected. There is no statistical significance to suggest that the average temperatures of these lakes are different. Therefore, the mean temperatures of Lake Crampton and Lake Ward are statistically the same.
+
+> In the HSD Tukey test, the p-value of comparing Ward Lake with Crampton Lake is 0.9714459. This p-value is above 0.05, which shows that the mean temperature of Ward Lake is not statistically different than the mean temperature of Crampton Lake.
