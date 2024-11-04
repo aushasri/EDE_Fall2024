@@ -65,14 +65,14 @@ my_theme <- theme_classic() + theme(
   plot.title = element_text(color = "black"),
   axis.title.x = element_text(color = "black"),
   axis.title.y = element_text(color = "black"),
-  axis.text = element_text(color = "darkgray"),
+  axis.text = element_text(color = "black"),
 
 #Line Color
   panel.grid.major = element_line(color = "lightgray"),
   panel.grid.minor = element_line(color = "lightgray"),
 
 #Rectangle Element
-  panel.background = element_rect(color = "lightblue"),
+  panel.background = element_rect(color = "white"),
   legend.key = element_rect(color = "white"),
 
 #Legend Position
@@ -130,7 +130,14 @@ Ozone_2010_Raw <- read.csv(
   here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2010_raw.csv"),
   stringsAsFactors = TRUE)
 
-GaringerOzone <-
+#Combine data from different years into one data frame
+
+GaringerOzone_Raw <- rbind(Ozone_2010_Raw, Ozone_2011_Raw, Ozone_2012_Raw,
+                       Ozone_2013_Raw, Ozone_2014_Raw, Ozone_2015_Raw,
+                       Ozone_2016_Raw, Ozone_2017_Raw, Ozone_2018_Raw,
+                       Ozone_2019_Raw)
+
+#view(GaringerOzone_Raw)
 
 ```
 
@@ -145,14 +152,36 @@ GaringerOzone <-
 6. Use a `left_join` to combine the data frames. Specify the correct order of data frames within this function so that the final dimensions are 3652 rows and 3 columns. Call your combined data frame GaringerOzone. 
 
 ```{r}
-# 3
+#3 Set date column as date class
 
-# 4
+class(GaringerOzone_Raw$Date)
 
-# 5
+GaringerOzone_Raw$Date <- as.Date(GaringerOzone_Raw$Date, format = "%m/%d/%Y")
 
-# 6
+class(GaringerOzone_Raw$Date)
 
+#view(GaringerOzone)
+
+#4 Select needed columns in data
+
+GaringerOzone_Raw_Columns <- select(GaringerOzone_Raw, "Date", "Daily.Max.8.hour.Ozone.Concentration", "DAILY_AQI_VALUE")
+
+#view(GaringerOzone_Raw_Columns)
+
+#5 Create a new data frame with a date sequence
+
+Days <- as.data.frame(seq(from = as.Date("2010-01-01"), to = as.Date("2019-12-31"), by = "day"))
+
+colnames(Days) <- "Date"
+
+#view(Days)
+
+#6 Combine Data Frames
+
+GaringerOzone <- left_join(x = Days, y = GaringerOzone_Raw_Columns,
+                           by = "Date", keep = TRUE)
+
+#view(GaringerOzone)
 
 ```
 
@@ -161,11 +190,22 @@ GaringerOzone <-
 7. Create a line plot depicting ozone concentrations over time. In this case, we will plot actual concentrations in ppm, not AQI values. Format your axes accordingly. Add a smoothed line showing any linear trend of your data. Does your plot suggest a trend in ozone concentration over time?
 
 ```{r}
-#7
+#7 Create a line plot for ppm analysis
+
+GaringerOzone_PPM <- ggplot(data = GaringerOzone,
+                            aes(Date.x, Daily.Max.8.hour.Ozone.Concentration)) +
+  geom_line(colour = "blue") + labs(
+    title = "Ozone Concentration (PPM) in Garinger, 2010-2019",
+    x = "Date",
+    y = "Ozone Concentration (PPM)") + 
+  theme(axis.title.y =
+             element_text(angle = 90))
+
+print(GaringerOzone_PPM)
 
 ```
 
->Answer:
+>Answer: The plot suggests there is seasonal variation in the ozone concentration in Garinger, because within each year the graph increases and decreases. Over an entire decade, this trend produces a cyclical nature in the graph. Scientifically, ground-level ozone occurs from a reaction between NOx (nitrogen oxides), sunlight, and VOCs (volatile organic compounds). Because sunlight is a component of this reaction, ozone concentrations tend to increase in the summer when daylight lasts longer. This graph could correlate to this seasonal variation. However, this hypothesis must be proven using time series analysis tests.
 
 ## Time Series Analysis
 
