@@ -31,10 +31,13 @@ This exercise accompanies the lessons in Environmental Data Analytics on general
 getwd()
 
 #Load packages
-install.packages("tidyverse")
-install.packages("zoo")
-install.packages("lubridate")
-install.packages("trend")
+
+#install.packages("tidyverse")
+#install.packages("zoo")
+#install.packages("lubridate")
+#install.packages("trend")
+#install.packages("Kendall")
+#install.packages("tseries")
 #install.packages("cowplot")
 #install.packages("viridisLite")
 
@@ -42,15 +45,41 @@ install.packages("trend")
 #Load packages
 
 library(tidyverse)
-library(lubridate)
-library(agricolae)
-library(cowplot)
 library(here)
-library(knitr)
+library(zoo)
+library(lubridate)
+library(trend)
+library(Kendall)
+library(tseries)
+library(cowplot)
 library(viridis)
 library(RColorBrewer)
 library(colormap)
 library(ggthemes)
+
+#Set custom theme
+
+my_theme <- theme_classic() + theme(
+  
+#Text Color
+  plot.title = element_text(color = "black"),
+  axis.title.x = element_text(color = "black"),
+  axis.title.y = element_text(color = "black"),
+  axis.text = element_text(color = "darkgray"),
+
+#Line Color
+  panel.grid.major = element_line(color = "lightgray"),
+  panel.grid.minor = element_line(color = "lightgray"),
+
+#Rectangle Element
+  panel.background = element_rect(color = "lightblue"),
+  legend.key = element_rect(color = "white"),
+
+#Legend Position
+  legend.position = 'bottom',
+complete = TRUE)
+
+theme_set(my_theme)
 
 
 ```
@@ -59,7 +88,49 @@ library(ggthemes)
 2. Import the ten datasets from the Ozone_TimeSeries folder in the Raw data folder. These contain ozone concentrations at Garinger High School in North Carolina from 2010-2019 (the EPA air database only allows downloads for one year at a time). Import these either individually or in bulk and then combine them into a single dataframe named `GaringerOzone` of 3589 observation and 20 variables. 
 
 ```{r, message = FALSE}
-#1
+#1 Import data sets
+
+Ozone_2019_Raw <- read.csv(
+  here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2019_raw.csv"),
+  stringsAsFactors = TRUE)
+
+Ozone_2018_Raw <- read.csv(
+  here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2018_raw.csv"),
+  stringsAsFactors = TRUE)
+
+Ozone_2017_Raw <- read.csv(
+  here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2017_raw.csv"),
+  stringsAsFactors = TRUE)
+
+Ozone_2016_Raw <- read.csv(
+  here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2016_raw.csv"),
+  stringsAsFactors = TRUE)
+
+Ozone_2015_Raw <- read.csv(
+  here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2015_raw.csv"),
+  stringsAsFactors = TRUE)
+
+Ozone_2014_Raw <- read.csv(
+  here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2014_raw.csv"),
+  stringsAsFactors = TRUE)
+
+Ozone_2013_Raw <- read.csv(
+  here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2013_raw.csv"),
+  stringsAsFactors = TRUE)
+
+Ozone_2012_Raw <- read.csv(
+  here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2012_raw.csv"),
+  stringsAsFactors = TRUE)
+
+Ozone_2011_Raw <- read.csv(
+  here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2011_raw.csv"),
+  stringsAsFactors = TRUE)
+
+Ozone_2010_Raw <- read.csv(
+  here("Data", "Raw","Ozone_TimeSeries", "EPAair_O3_GaringerNC2010_raw.csv"),
+  stringsAsFactors = TRUE)
+
+GaringerOzone <-
 
 ```
 
