@@ -1,6 +1,6 @@
 ---
 title: "Assignment 8: Time Series Analysis"
-author: "Student Name"
+author: "Asreeta Ushasri"
 date: "Fall 2024"
 output: pdf_document
 geometry: margin=2.54cm
@@ -27,6 +27,31 @@ This exercise accompanies the lessons in Environmental Data Analytics on general
 * Set your ggplot theme
 
 ```{r}
+#Check working directory
+getwd()
+
+#Load packages
+install.packages("tidyverse")
+install.packages("zoo")
+install.packages("lubridate")
+install.packages("trend")
+#install.packages("cowplot")
+#install.packages("viridisLite")
+
+
+#Load packages
+
+library(tidyverse)
+library(lubridate)
+library(agricolae)
+library(cowplot)
+library(here)
+library(knitr)
+library(viridis)
+library(RColorBrewer)
+library(colormap)
+library(ggthemes)
+
 
 ```
 
