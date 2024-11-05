@@ -42,9 +42,6 @@ This exercise accompanies the lessons in Environmental Data Analytics on general
 #install.packages("cowplot")
 #install.packages("viridisLite")
 
-
-#Load packages
-
 library(tidyverse)
 library(here)
 library(zoo)
@@ -189,6 +186,8 @@ GaringerOzone <- left_join(x = Days, y = GaringerOzone_Raw_Columns,
 
 ```
 
+\newpage
+
 ## Visualize
 
 7. Create a line plot depicting ozone concentrations over time. In this case, we will plot actual concentrations in ppm, not AQI values. Format your axes accordingly. Add a smoothed line showing any linear trend of your data. Does your plot suggest a trend in ozone concentration over time?
@@ -213,6 +212,7 @@ print(GaringerOzone_PPM)
 ```
 
 >Answer: The plot suggests there is seasonal variation in the ozone concentration in Garinger, because within each year the graph increases and decreases. Over an entire decade, this trend produces a cyclical nature in the graph. Scientifically, ground-level ozone occurs from a reaction between NOx (nitrogen oxides), sunlight, and VOCs (volatile organic compounds). Because sunlight is a component of this reaction, ozone concentrations tend to increase in the summer when daylight lasts longer. This graph could correlate to this seasonal variation. However, this hypothesis must be proven using time series analysis tests.
+
 
 ## Time Series Analysis
 
