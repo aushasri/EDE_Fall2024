@@ -28,7 +28,8 @@ This exercise accompanies the lessons in Environmental Data Analytics on general
 
 ```{r}
 #Check working directory
-getwd()
+
+#getwd()
 
 #Load packages
 
@@ -137,7 +138,7 @@ GaringerOzone_Raw <- rbind(Ozone_2010_Raw, Ozone_2011_Raw, Ozone_2012_Raw,
                        Ozone_2016_Raw, Ozone_2017_Raw, Ozone_2018_Raw,
                        Ozone_2019_Raw)
 
-#view(GaringerOzone_Raw)
+view(GaringerOzone_Raw)
 
 ```
 
@@ -160,13 +161,13 @@ GaringerOzone_Raw$Date <- as.Date(GaringerOzone_Raw$Date, format = "%m/%d/%Y")
 
 class(GaringerOzone_Raw$Date)
 
-#view(GaringerOzone)
+view(GaringerOzone_Raw)
 
 #4 Select needed columns in data
 
 GaringerOzone_Raw_Columns <- select(GaringerOzone_Raw, "Date", "Daily.Max.8.hour.Ozone.Concentration", "DAILY_AQI_VALUE")
 
-#view(GaringerOzone_Raw_Columns)
+view(GaringerOzone_Raw_Columns)
 
 #5 Create a new data frame with a date sequence
 
@@ -174,14 +175,14 @@ Days <- as.data.frame(seq(from = as.Date("2010-01-01"), to = as.Date("2019-12-31
 
 colnames(Days) <- "Date"
 
-#view(Days)
+view(Days)
 
 #6 Combine Data Frames
 
 GaringerOzone <- left_join(x = Days, y = GaringerOzone_Raw_Columns,
-                           by = "Date", keep = TRUE)
+                           by = "Date")
 
-#view(GaringerOzone)
+view(GaringerOzone)
 
 ```
 
@@ -193,13 +194,13 @@ GaringerOzone <- left_join(x = Days, y = GaringerOzone_Raw_Columns,
 #7 Create a line plot for ppm analysis
 
 GaringerOzone_PPM <- ggplot(data = GaringerOzone,
-                            aes(Date.x, Daily.Max.8.hour.Ozone.Concentration)) +
-  geom_line(colour = "blue") + labs(
+                            aes(Date, Daily.Max.8.hour.Ozone.Concentration)) +
+  geom_line(colour = "darkgray") + labs(
     title = "Ozone Concentration (PPM) in Garinger, 2010-2019",
     x = "Date",
     y = "Ozone Concentration (PPM)") + 
   theme(axis.title.y =
-             element_text(angle = 90))
+             element_text(angle = 90)) + geom_smooth(method = "lm")
 
 print(GaringerOzone_PPM)
 
@@ -214,7 +215,12 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 8. Use a linear interpolation to fill in missing daily data for ozone concentration. Why didn't we use a piecewise constant or spline interpolation?
 
 ```{r}
-#8
+#8 Linear Interpolation
+GaringerOzone_Clean <- 
+  GaringerOzone %>% 
+  mutate(Daily.Max.8.hour.Ozone.Concentration.clean = zoo::na.approx(Daily.Max.8.hour.Ozone.Concentration) )
+
+view(GaringerOzone_Clean)
 
 ```
 
@@ -224,7 +230,22 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 9. Create a new data frame called `GaringerOzone.monthly` that contains aggregated data: mean ozone concentrations for each month. In your pipe, you will need to first add columns for year and month to form the groupings. In a separate line of code, create a new Date column with each month-year combination being set as the first day of the month (this is for graphing purposes only)
 
 ```{r}
-#9
+#9 Create a data frame for monthly concentrations
+
+GaringerOzone.monthly <-
+  GaringerOzone_Clean %>%
+  mutate(Month = month(Date), Year = year(Date)) %>%
+         group_by(Year, Month) %>%
+    summarise(Mean.Ozone = mean(Daily.Max.8.hour.Ozone.Concentration.clean))
+
+view(GaringerOzone.monthly)
+
+
+GaringerOzone.monthly <- GaringerOzone.monthly %>% 
+  mutate(Date = make_date(year = Year, month = Month, day = "01"))
+
+view(GaringerOzone.monthly)
+
 
 ```
 
@@ -232,7 +253,11 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 10. Generate two time series objects. Name the first `GaringerOzone.daily.ts` and base it on the dataframe of daily observations. Name the second `GaringerOzone.monthly.ts` and base it on the monthly average ozone values. Be sure that each specifies the correct start and end dates and the frequency of the time series.
 
 ```{r}
-#10
+#10 Create two time series
+
+GaringerOzone.daily.ts
+
+GaringerOzone.monthly.ts
 
 ```
 
