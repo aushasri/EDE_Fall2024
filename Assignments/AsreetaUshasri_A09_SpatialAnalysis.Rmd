@@ -1,6 +1,6 @@
 ---
 title: "Assignment 9: Spatial Analysis in R"
-author: "Student Name"
+author: "Asreeta Ushasri"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -27,11 +27,24 @@ This exercise accompanies the lessons in Environmental Data Analytics (ENV872L) 
 2.    Execute the `here()` command to display the current project directory
 
 ```{r Prepare workspace, error=F, warning=F}
-#1. 
+#1. Import libraries
 
+library(tidyverse)
+library(lubridate)
+library(here)
 
-#2. 
+#install.packages('sf')
+library(sf)
+#install.packages('leaflet')
+library(leaflet)
+#install.packages('mapview')
+library(mapview); mapviewOptions(fgb = FALSE)
 
+#Disable on-the-fly projections
+sf::sf_use_s2(FALSE)
+
+#2. Display current project directory
+here()
 
 ```
 
