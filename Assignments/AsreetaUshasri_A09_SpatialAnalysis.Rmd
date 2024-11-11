@@ -71,16 +71,17 @@ NE_Streams <- NE_Streams %>%
 
 #4. Reveal the CRS of the counties features
 
+st_crs(NE_Streams)
 
 #5. Plot the data
 
+mapview(NE_Streams, zcol='NAME')
 
 ```
 
 6.    What is the EPSG code of the Counties dataset? Is this a geographic or a projected coordinate reference system? (Om other words, does this CRS use angular or planar coordinate units?) To what datum is this CRS associated? (Tip: look for the EPSG code on <https://epsg.io>)
 
-> ANSWER: 
-> 
+> ANSWER: The EPSD code of this dataset is 4269. This represents the NAD83 or the North American Datum 1983. This is a Geographic Coordinate Reference System (NOAA, 2018).
 
 
 ### Read in gage locations csv as a dataframe, then display the column names it contains
@@ -94,17 +95,19 @@ Next we'll read in some USGS/NWIS gage location data added to the `Data/Raw` fol
 ```{r Read in USGS Gage Locations}
 #7. Read in gage locations csv as a dataframe
 
-
+Gage_Locations_DF <- read.csv(here("Data/Raw/NWIS_SiteInfo_NE_RAW.csv"),
+                           stringsAsFactors=TRUE)
 
 #8. Display the structure of the dataframe
 
+#view(Gage_Locations_DF)
+head(Gage_Locations_DF)
 
 ```
 
-9.    What columns in the dataset contain the x and y coordinate values, respectively?  
-> ANSWER:
-> 
+9.    What columns in the dataset contain the x and y coordinate values, respectively?
 
+> ANSWER: The dec_long_va depicts the longitude of the locations, which would correspond with the x value. The dec_lat_va column contains the latitude of the locations. On a 2D display, the latitude would correspond with an y value.
 
 ### Convert the dataframe to a spatial features ("sf") dataframe
 
@@ -116,19 +119,23 @@ Next we'll read in some USGS/NWIS gage location data added to the `Data/Raw` fol
 ```{r Convert dataframe to sf dataframe}
 #10. Convert to an sf object
 
-
+Gage_Locations_SF <- Gage_Locations_DF %>% 
+  st_as_sf(
+    coords = c('dec_long_va','dec_lat_va'),
+    crs=4269
+    )
 
 #11. Display the structure
 
-
+#view(Gage_Locations_SF)
+head(Gage_Locations_SF)
 
 
 ```
 
 12.   What new field(s) appear in the sf dataframe created? What field(s), if any, disappeared?
 
->ANSWER: 
->
+>ANSWER: Geometry is a new column in the SF dataframe. The geometry column provides details on the spatial data points. Meanwhile, the dec_long_va and dec_lat_vacolumns disappeared in the SF dataframe. These represent the x and y coordinates of the new spatial points created in the SF dataframe, and therefore are incoporated in the geometry field.
 
 
 ### Plot the gage locations on top of the counties
@@ -141,6 +148,11 @@ Next we'll read in some USGS/NWIS gage location data added to the `Data/Raw` fol
 ```{r Plot the spatial features}
 #13. Plot the gage locations atop the county features
 
+ggplot() +
+  geom_sf(data = NE_Streams, color = 'darkblue') + 
+  geom_sf(data = Gage_Locations_SF, color = 'darkgreen', shape='x') + theme(
+    panel.background = element_rect(color = "white"),
+    legend.key = element_rect(color = "white")) + labs(title = )
 
 ```
 
