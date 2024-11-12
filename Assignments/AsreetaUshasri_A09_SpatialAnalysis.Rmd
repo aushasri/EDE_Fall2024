@@ -61,22 +61,22 @@ In this exercise, we will be exploring stream gage height data in Nebraska corre
 ```{r Read the county data into an sf dataframe}
 #3. Read in Counties shapefile into an sf dataframe
 
-NE_Streams <- st_read(here('Data/Raw/Spatial/cb_2018_us_county_20m.shp'))
+NE_Counties <- st_read(here('Data/Raw/Spatial/cb_2018_us_county_20m.shp'))
 
-#view(NE_Streams)
+#view(NE_Counties)
 
 #Filter for just NE counties
 
-NE_Streams <- NE_Streams %>% 
+NE_Counties <- NE_Counties %>% 
   filter(STATEFP == 31)
 
 #4. Reveal the CRS of the counties features
 
-st_crs(NE_Streams)
+st_crs(NE_Counties)
 
 #5. Plot the data
 
-mapview(NE_Streams, zcol='NAME')
+mapview(NE_Counties, zcol='NAME')
 
 ```
 
@@ -150,7 +150,7 @@ head(Gage_Locations_SF)
 #13. Plot the gage locations atop the county features
 
 ggplot() +
-  geom_sf(data = NE_Streams, color = 'black') + 
+  geom_sf(data = NE_Counties, color = 'black') + 
   geom_sf(data = Gage_Locations_SF, color = 'darkblue', size = 0.8) + theme(
     panel.background = element_rect(color = "white"),
     legend.key = element_rect(color = "white")) +
@@ -187,11 +187,11 @@ colnames(Site_Flow_DF)
 #16. Join the flow data to our NWIS gage location spatial dataframe
 
 NWIS_Flow_Gage_DF <-
-  full_join(Site_Flow_DF, Gage_Locations_DF, by = 'site_no',
-            copy = FALSE, suffix = c(".x", ".y"),
-            keep = NULL, multiple = "all") %>% 
-  drop_na('dec_long_va') %>%
-  drop_na('dec_lat_va')
+  left_join(Site_Flow_DF, Gage_Locations_DF,
+            by = c('site_no' = 'site_no')) %>% 
+              drop_na('dec_long_va') %>%
+              drop_na('dec_lat_va')
+
 
 #view(NWIS_Flow_Gage_DF)
 
@@ -200,6 +200,8 @@ NWIS_Flow_Gage_SF <- NWIS_Flow_Gage_DF %>%
     coords = c('dec_long_va','dec_lat_va'),
     crs=4269
     )
+
+#view(NWIS_Flow_Gage_SF)
 
 #17. Show the column names in the resulting spatial dataframe
 
@@ -223,12 +225,11 @@ Now we can examine where the flooding appears most acute by visualizing gage hei
 NWIS <- NWIS_Flow_Gage_SF %>% 
   rename(GageHeight = gage_ht)
 
-Counties <- NE_Streams
+Counties <- NE_Counties
 
 mapview(NWIS, zcol = "GageHeight", cex = "GageHeight",
         legend = TRUE) +
-  mapview(Counties)
-
+  mapview(Counties, col.regions = "lightyellow")
 
 ```
 
@@ -278,24 +279,32 @@ Now let's zoom into a particular county and examine the gages located there.
 
 #view(Counties_UTM14)
 
-ggplot() +
-  geom_sf(Counties_UTM14) %>%
-  aes(NAME == "Lancaster County")
+LancasterCounty <- Counties_UTM14 %>% 
+  filter(NAME == "Lancaster")
 
-mapview(Counties_UTM14) %>%
-  filter(NAME == "Lancaster County")
-
-mapview(NWIS_UTM14, zcol = "GageHeight", cex = "GageHeight",
-        legend = TRUE)
-
+mapview(LancasterCounty)
 
 #23 Spatially select gages within the selected county
 
+Lancaster_Gage_Height <- NWIS_UTM14 %>%  
+  st_filter(LancasterCounty, .predicate = st_intersects)
 
-#24 Spatially select gages within 15 k of the selected county
+#24 Spatially select gages within 15 km of the selected county
 
+Lancaster_15km <- st_buffer(LancasterCounty, 15000)
+
+mapview(Lancaster_15km) + mapview(LancasterCounty)
+
+Lancaster_Gage_Height_15km <- NWIS_UTM14 %>%  
+  st_filter(Lancaster_15km, .predicate = st_intersects)
+
+mapview(Lancaster_Gage_Height_15km)
 
 #25 Create a Plot
 
+mapview(LancasterCounty, col.regions = "pink",
+        map.types = c("CartoDB.Positron")) +
+  mapview(Lancaster_Gage_Height_15km, col.regions = "blue") +
+  mapview(Lancaster_Gage_Height, col.regions = "purple")
 
 ```
