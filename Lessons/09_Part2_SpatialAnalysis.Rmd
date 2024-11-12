@@ -91,7 +91,7 @@ Below we read in the USA counties shapefile, filtering for just the NC features 
 
 ```{r read.filtered.records.from.shapefile.to.sf.object}
 #Read the shapefile into an sf dataframe named counties_sf, filtering for NC only
-counties_sf<- st_read(here('Data/Spatial/cb_2018_us_county_20m.shp')) %>% 
+counties_sf<- st_read(here('Data/Raw/Spatial/cb_2018_us_county_20m.shp')) %>% 
   filter(STATEFP == 37) #Filter for just NC Counties
 
 #Reveal the column names

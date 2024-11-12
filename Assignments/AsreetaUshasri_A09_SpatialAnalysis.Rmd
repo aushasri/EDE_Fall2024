@@ -32,6 +32,7 @@ This exercise accompanies the lessons in Environmental Data Analytics (ENV872L) 
 library(tidyverse)
 library(lubridate)
 library(here)
+library(dplyr)
 
 #install.packages('sf')
 library(sf)
@@ -149,10 +150,11 @@ head(Gage_Locations_SF)
 #13. Plot the gage locations atop the county features
 
 ggplot() +
-  geom_sf(data = NE_Streams, color = 'darkblue') + 
-  geom_sf(data = Gage_Locations_SF, color = 'darkgreen', shape='x') + theme(
+  geom_sf(data = NE_Streams, color = 'black') + 
+  geom_sf(data = Gage_Locations_SF, color = 'darkblue', size = 0.8) + theme(
     panel.background = element_rect(color = "white"),
-    legend.key = element_rect(color = "white")) + labs(title = )
+    legend.key = element_rect(color = "white")) +
+  labs(title = "Stream Flow Gage Sites, 1928 to 2019")
 
 ```
 
@@ -173,23 +175,39 @@ Lastly, we want to attach some gage height data to our site locations. I've cons
 ```{r Read in gage site data}
 #14. Read the site flow data into a data frame
 
+Site_Flow_DF <- read.csv(here("Data/Raw/NWIS_SiteFlowData_NE_RAW.csv"),
+                           stringsAsFactors=TRUE)
 
 
 #15. Show the column names
 
-
+colnames(Site_Flow_DF)
+#view(Site_Flow_DF)
 
 #16. Join the flow data to our NWIS gage location spatial dataframe
 
+NWIS_Flow_Gage_DF <-
+  full_join(Site_Flow_DF, Gage_Locations_DF, by = 'site_no',
+            copy = FALSE, suffix = c(".x", ".y"),
+            keep = NULL, multiple = "all") %>% 
+  drop_na('dec_long_va') %>%
+  drop_na('dec_lat_va')
 
+#view(NWIS_Flow_Gage_DF)
+
+NWIS_Flow_Gage_SF <- NWIS_Flow_Gage_DF %>% 
+  st_as_sf(
+    coords = c('dec_long_va','dec_lat_va'),
+    crs=4269
+    )
 
 #17. Show the column names in the resulting spatial dataframe
 
-
+colnames(NWIS_Flow_Gage_SF)
 
 #18. Show the dimensions of this joined dataset
 
-
+dim(NWIS_Flow_Gage_SF)
 
 ```
 
@@ -201,6 +219,15 @@ Now we can examine where the flooding appears most acute by visualizing gage hei
 
 ```{r map gage sites}
 #Map the points, sized by gage height
+
+NWIS <- NWIS_Flow_Gage_SF %>% 
+  rename(GageHeight = gage_ht)
+
+Counties <- NE_Streams
+
+mapview(NWIS, zcol = "GageHeight", cex = "GageHeight",
+        legend = TRUE) +
+  mapview(Counties)
 
 
 ```
@@ -220,11 +247,15 @@ Up next we will do some spatial analysis with our data. To prepare for this, we 
 ```{r spatial analysis}
 #20 Transform the counties and gage location datasets to UTM Zone 14
 
+NWIS_UTM14 <- st_transform(NWIS,32614)
+Counties_UTM14 <- st_transform(Counties,32614)
 
 
 #21 Plot the data
 
-
+mapview(NWIS_UTM14, zcol = "GageHeight", cex = "GageHeight",
+        legend = TRUE) +
+  mapview(Counties_UTM14)
 
 ```
 
@@ -245,6 +276,18 @@ Now let's zoom into a particular county and examine the gages located there.
 ```{r spatial selection}
 #22 Select the county
 
+#view(Counties_UTM14)
+
+ggplot() +
+  geom_sf(Counties_UTM14) %>%
+  aes(NAME == "Lancaster County")
+
+mapview(Counties_UTM14) %>%
+  filter(NAME == "Lancaster County")
+
+mapview(NWIS_UTM14, zcol = "GageHeight", cex = "GageHeight",
+        legend = TRUE)
+
 
 #23 Spatially select gages within the selected county
 
@@ -252,7 +295,7 @@ Now let's zoom into a particular county and examine the gages located there.
 #24 Spatially select gages within 15 k of the selected county
 
 
-#25 Plot
+#25 Create a Plot
 
 
 ```
