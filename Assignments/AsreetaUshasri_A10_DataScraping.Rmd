@@ -80,8 +80,26 @@ In the code chunk below scrape these values, assigning them to four separate var
 ```{r scrape.the.data}
 #3 Collect system information data
 
+Water_System_Name <- URL %>% 
+  html_nodes("div+ table tr:nth-child(1) td:nth-child(2)") %>% 
+  html_text()
 
+PWSID <- URL %>% 
+  html_nodes("td tr:nth-child(1) td:nth-child(5)") %>% 
+  html_text()
 
+Ownership <- URL %>% 
+  html_nodes("div+ table tr:nth-child(2) td:nth-child(4)") %>% 
+  html_text()
+
+MGD <- URL %>% 
+  html_nodes("th~ td+ td") %>% 
+  html_text()
+
+Water_System_Name
+PWSID
+Ownership
+MGD
 
 ```
 
@@ -95,10 +113,10 @@ In the code chunk below scrape these values, assigning them to four separate var
 5. Create a line plot of the maximum daily withdrawals across the months for 2023, making sure, the months are presented in proper sequence.
 
 ```{r create.a.dataframe.from.scraped.data}
-#4 
+#4 Create a dataframe
 
 
-#5 
+#5 Line Plot
 
 
 ```
