@@ -56,8 +56,7 @@ Indicate this website as the as the URL to be scraped. (In other words, read the
 #2 Set the URL as the website for the data
 
 URL <-
-  read_html('https://www.ncwater.org/WUDC/app/LWSP/report.php?
-            pwsid=03-32-010&year=2023')
+  read_html('https://www.ncwater.org/WUDC/app/LWSP/report.php?pwsid=03-32-010&year=2023')
 
 URL
 
@@ -115,8 +114,36 @@ MGD
 ```{r create.a.dataframe.from.scraped.data}
 #4 Create a dataframe
 
+Water_Months <- c("Jan", "May", "Sept", "Feb", "June", "Oct",
+          "Mar", "Jul", "Nov", "Apr", "Aug", "Dec")
+
+Date <- c(1, 5, 9, 2, 6, 10, 3, 7, 11, 4, 8, 12)
+
+Durham_Water_DF <- data.frame("Water_System" = rep(Water_System_Name),
+                             "Max_Day_Use" = as.numeric(MGD),
+                             "PWSID" = rep(PWSID),
+                             "Ownership" = rep(Ownership),
+                             "Month_Name" = Water_Months,
+                             "Month_Date" = as.numeric(Date))
+
+view(Durham_Water_DF)
+
+class(Durham_Water_DF$Month_Date)
+
+class(Durham_Water_DF$Max_Day_Use)
+
+str(Durham_Water_DF)
 
 #5 Line Plot
+
+Water_Plot <- ggplot(Durham_Water_DF, aes(x = Month_Date, y = Max_Day_Use)) +
+  geom_line() + labs(title = "Maximum Daily Water Use
+  Durham County, NC (2023)",
+                     x = "Month",
+                     y = "Max Daily Usage (MDG)") + theme_light() +
+  scale_x_continuous(breaks = seq(1, 12, by = 1)) +
+  ylim(0, 60)
+
 
 
 ```
