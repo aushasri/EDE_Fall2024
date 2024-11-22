@@ -80,6 +80,8 @@ In the code chunk below scrape these values, assigning them to four separate var
 
 >HINT: The first value should be "Durham", the second "03-32-010", the third "Municipality", and the last should be a vector of 12 numeric values (represented as strings)".
 
+\newpage
+
 ```{r scrape.the.data}
 
 #3 Collect system information data
@@ -132,23 +134,18 @@ Durham_Water_DF <- data.frame("Water_System" = rep(Water_System_Name),
                              "Month_Name" = Water_Months,
                              "Month_Date" = as.numeric(Date))
 
-view(Durham_Water_DF)
-
-class(Durham_Water_DF$Month_Date)
-
-class(Durham_Water_DF$Month_Date)
-
-class(Durham_Water_DF$Max_Day_Use)
-
-str(Durham_Water_DF)
+#view(Durham_Water_DF)
+#class(Durham_Water_DF$Month_Date)
+#class(Durham_Water_DF$Max_Day_Use)
+#str(Durham_Water_DF)
 
 #5 Line Plot
 
 Water_Plot <- ggplot(Durham_Water_DF, aes(x = Month_Date, y = Max_Day_Use)) +
-  geom_line() + labs(title = "Maximum Daily Water Use
-  Durham County, NC (2023)",
+  geom_line() +
+  labs(title = "Maximum Daily Water Use in Durham County, NC (2023)",
                      x = "Month",
-                     y = "Max Daily Usage (MDG)") + theme_light() +
+                     y = "Max Daily Usage (MGD)") + theme_light() +
   scale_x_continuous(breaks = seq(1, 12, by = 1),
     labels = month.abb) +
   ylim(0, 60)
@@ -222,13 +219,11 @@ Water_Usage_Function <- function(Input_PWSID, Input_Year){
     geom_line() + labs(title = Plot_Title,
                        subtitle = Input_Year,
                        x = "Month",
-                       y = "Max Daily Usage (MDG)") + theme_light() +
+                       y = "Max Daily Usage (MGD)") + theme_light() +
     scale_x_continuous(breaks = seq(1, 12, by = 1),
       labels = month.abb)
   
   print(Function_Plot) }
-
-
 
 #Test function with PWSID as Apex and Year as 2022
 
@@ -289,6 +284,9 @@ Water_Usage_Function("03-32-010", 2015)
 
 ```
 
+\newpage
+
+
 8. Use the function above to extract data for Asheville (PWSID = 01-11-010) in 2015. Combine this data with the Durham data collected above and create a plot that compares Asheville's to Durham's water withdrawals.
 
 ```{r fetch.and.plot.Asheville.2015.data}
@@ -300,8 +298,6 @@ Water_Usage_Function("03-32-010", 2015)
 
 Durham_Data <- as.data.frame(Water_Usage_DF_Function("03-32-010", 2015))
 Asheville_Data <- as.data.frame(Water_Usage_DF_Function("01-11-010", 2015))
-
-plot_grid(Durham_Data, Asheville_Data)
 
 #Combine the data sets into one data frame
 
@@ -320,7 +316,7 @@ County_MDG_Graph <- ggplot(data = County_Water_Use,
   labs(title = "Maximum Daily Water Usage",
                        subtitle = "Durham and Asheville, 2015",
                        x = "Month",
-                       y = "Max Daily Usage (MDG)",
+                       y = "Max Daily Usage (MGD)",
        color = "County") +
     scale_x_continuous(breaks = seq(1, 12, by = 1), labels = month.abb)
 
@@ -335,7 +331,7 @@ County_MDG_Graph
 
 ```{r fetch.and.plot.Asheville.multiyear.data }
 
-#9 
+#9 Create multiyear graph of Asheville water usage
 
 Asheville_Years <- c(2018,2019,2020,2021,2022)
 
@@ -351,7 +347,8 @@ Asheville_Multiyear_DF <- map2(Asheville_PWSID, Asheville_Years,
 #Plot Multiple Years
 ggplot(Asheville_Multiyear_DF) +
   geom_line(aes(x=Month_Date, y=Max_Day_Use, color=as.character(Year))) +
-    geom_smooth(aes(x = Month_Date, y = Max_Day_Use), method = "loess", se = FALSE, color = "black") +
+    geom_smooth(aes(x = Month_Date, y = Max_Day_Use),
+                method = "loess", se = FALSE, color = "black") +
   labs(title = "Water Usage in Asheville",
        subtitle = "2018 to 2022",
        y="Maximum Water Usage (MGD)",
