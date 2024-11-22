@@ -42,6 +42,7 @@ library(dataRetrieval)
 library(tidycensus)
 library(here)
 library(cowplot)
+library(purrr)
 
 getwd()
 
@@ -59,8 +60,7 @@ Indicate this website as the as the URL to be scraped. (In other words, read the
 #2 Set the URL as the website for the data
 
 URL <-
-  read_html('https://www.ncwater.org/WUDC/app/LWSP/report.php?
-            pwsid=03-32-010&year=2023')
+  read_html('https://www.ncwater.org/WUDC/app/LWSP/report.php?pwsid=03-32-010&year=2023')
 
 URL
 
@@ -311,6 +311,8 @@ County_Water_Use <- rbind(Durham_Data, Asheville_Data)
 
 #Plot the two counties on the same graph with ggplot
 
+class(County_Water_Use$Water_System)
+
 County_MDG_Graph <- ggplot(data = County_Water_Use,
             aes(x = Month_Date, y = Max_Day_Use,
        color = Water_System)) + 
@@ -334,19 +336,35 @@ County_MDG_Graph
 ```{r fetch.and.plot.Asheville.multiyear.data }
 
 #9 
-dfs_2020 <- map2(the_years, the_facility_ids_subset, Water_Usage_DF_Function) 
 
-#Conflate the returned list of dataframes into a single one
-df_2020 <- bind_rows(dfs_2020)
+Asheville_Years <- c(2018,2019,2020,2021,2022)
 
+Asheville_PWSID <- rep.int("01-11-010",length(Asheville_Years))
 
-#Plot
-ggplot(df_2020,aes(y = Avg_Withdrawals_mgd, x=Facility_type)) +
-  geom_boxplot()
+Asheville_Multiyear_DF <- map2(Asheville_PWSID, Asheville_Years,
+       Water_Usage_DF_Function) %>%
+  map2(Asheville_Years, ., ~ mutate(.y, Year = .x)) %>%
+  bind_rows()
 
+#view(Asheville_Multiyear_DF)
+
+#Plot Multiple Years
+ggplot(Asheville_Multiyear_DF) +
+  geom_line(aes(x=Month_Date, y=Max_Day_Use, color=as.character(Year))) +
+    geom_smooth(aes(x = Month_Date, y = Max_Day_Use), method = "loess", se = FALSE, color = "black") +
+  labs(title = "Water Usage in Asheville",
+       subtitle = "2018 to 2022",
+       y="Maximum Water Usage (MGD)",
+       x="Month",
+       color = "Year") +
+  theme_light() +
+    scale_x_continuous(breaks = seq(1, 12, by = 1),
+      labels = month.abb)
 
 ```
 
 Question: Just by looking at the plot (i.e. not running statistics), does Asheville have a trend in water usage over time?
-> Answer:
->
+
+> Answer: Asheville has variability between years regarding the water usage. For example, Asheville had a lower water usage in 2018 than in 2019. The water usage in September 2018 was under 25 MGD, whereas the water usage in September 2019 was above 27.5. The water usage in 2020 and 2021 dropped from the 2019 levels.
+
+> This data showcases a seasonal trend over time. Water usage in Asheville peaks around the warmer months of August/September. In contrast, the water usage drops in March/April and November. 2022 differs from this trend slightly. Although this year follows a similar general seasonality trend, peak water usage in 2022 occured in May/June, with another sudden peak in December. Overall, Asheville displays a seasonal trend in water usage over time.
