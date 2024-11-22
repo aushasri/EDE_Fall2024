@@ -26,6 +26,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on data sc
 * Check your working directory
 
 ```{r 1. Project Setup, message = FALSE}
+
 #1 Load packages
 
 #install.packages('rvest')
@@ -40,6 +41,7 @@ library(viridis)
 library(dataRetrieval)
 library(tidycensus)
 library(here)
+library(cowplot)
 
 getwd()
 
@@ -53,10 +55,12 @@ getwd()
 Indicate this website as the as the URL to be scraped. (In other words, read the contents into an `rvest` webpage object.)
 
 ```{r set.the.scraping.website}
+
 #2 Set the URL as the website for the data
 
 URL <-
-  read_html('https://www.ncwater.org/WUDC/app/LWSP/report.php?pwsid=03-32-010&year=2023')
+  read_html('https://www.ncwater.org/WUDC/app/LWSP/report.php?
+            pwsid=03-32-010&year=2023')
 
 URL
 
@@ -77,6 +81,7 @@ In the code chunk below scrape these values, assigning them to four separate var
 >HINT: The first value should be "Durham", the second "03-32-010", the third "Municipality", and the last should be a vector of 12 numeric values (represented as strings)".
 
 ```{r scrape.the.data}
+
 #3 Collect system information data
 
 Water_System_Name <- URL %>% 
@@ -112,6 +117,7 @@ MGD
 5. Create a line plot of the maximum daily withdrawals across the months for 2023, making sure, the months are presented in proper sequence.
 
 ```{r create.a.dataframe.from.scraped.data}
+
 #4 Create a dataframe
 
 Water_Months <- c("Jan", "May", "Sept", "Feb", "June", "Oct",
@@ -130,6 +136,8 @@ view(Durham_Water_DF)
 
 class(Durham_Water_DF$Month_Date)
 
+class(Durham_Water_DF$Month_Date)
+
 class(Durham_Water_DF$Max_Day_Use)
 
 str(Durham_Water_DF)
@@ -141,10 +149,11 @@ Water_Plot <- ggplot(Durham_Water_DF, aes(x = Month_Date, y = Max_Day_Use)) +
   Durham County, NC (2023)",
                      x = "Month",
                      y = "Max Daily Usage (MDG)") + theme_light() +
-  scale_x_continuous(breaks = seq(1, 12, by = 1)) +
+  scale_x_continuous(breaks = seq(1, 12, by = 1),
+    labels = month.abb) +
   ylim(0, 60)
 
-
+print(Water_Plot)
 
 ```
 
@@ -152,24 +161,168 @@ Water_Plot <- ggplot(Durham_Water_DF, aes(x = Month_Date, y = Max_Day_Use)) +
 **Be sure to modify the code to reflect the year and site (pwsid) scraped**.
 
 ```{r construct.a.scraping.function}
-#6. 
 
+#6. First, start a function with two inputs
+
+Water_Usage_Function <- function(Input_PWSID, Input_Year){
+  
+  #Next construct the scrape URL code
+  
+  Base_URL <- 'https://www.ncwater.org/WUDC/app/LWSP/report.php?'
+  
+  Scrape_URL <- paste0(Base_URL, 'pwsid=', Input_PWSID, '&year=', Input_Year)
+  
+  #print(Scrape_URL)
+  
+  #Assign the html nodes of the desired columns for the data frame
+  
+  Function_URL <- read_html(Scrape_URL)
+  
+  Function_Water_System_Name <- Function_URL %>% 
+    html_nodes("div+ table tr:nth-child(1) td:nth-child(2)") %>% 
+    html_text()
+  
+  Function_PWSID <- Function_URL %>% 
+    html_nodes("td tr:nth-child(1) td:nth-child(5)") %>% 
+    html_text()
+  
+  Function_Ownership <- Function_URL %>% 
+    html_nodes("div+ table tr:nth-child(2) td:nth-child(4)") %>% 
+    html_text()
+
+  Function_MGD <- Function_URL %>% 
+    html_nodes("th~ td+ td") %>% 
+    html_text()
+
+  #Assign the month labels for to match the order scraped from website
+  
+  Water_Months <- c("Jan", "May", "Sept", "Feb", "June", "Oct",
+            "Mar", "Jul", "Nov", "Apr", "Aug", "Dec")
+  
+  Date <- c(1, 5, 9, 2, 6, 10, 3, 7, 11, 4, 8, 12)
+  
+  #Set up data frame with desired columns
+  
+  Function_WaterUsage_DF <- data.frame(
+    "Water_System" = rep(Function_Water_System_Name),
+    "Max_Day_Use" = as.numeric(Function_MGD),
+    "PWSID" = rep(Function_PWSID),
+    "Ownership" = rep(Function_Ownership),
+    "Month_Name" = Water_Months,
+    "Month_Date" = as.numeric(Date))
+  
+  #Assign a plot title based on the variable water system name
+  
+  Plot_Title <- paste("Maximum Daily Water Use in", Function_Water_System_Name)
+  
+  #Plot the findings from the function
+  
+  Function_Plot <- ggplot(Function_WaterUsage_DF,
+                          aes(x = Month_Date, y = Max_Day_Use)) +
+    geom_line() + labs(title = Plot_Title,
+                       subtitle = Input_Year,
+                       x = "Month",
+                       y = "Max Daily Usage (MDG)") + theme_light() +
+    scale_x_continuous(breaks = seq(1, 12, by = 1),
+      labels = month.abb)
+  
+  print(Function_Plot) }
+
+
+
+#Test function with PWSID as Apex and Year as 2022
+
+Water_Usage_Function("03-92-045", 2022)
+
+
+#Create a separate function which only produces data frame
+#This will be used for Part 8 and Part 9
+#This function will be helpful for custom graphs
+
+Water_Usage_DF_Function <- function(Input_PWSID, Input_Year){
+  
+  Base_URL <- 'https://www.ncwater.org/WUDC/app/LWSP/report.php?'
+  
+  Scrape_URL <- paste0(Base_URL, 'pwsid=', Input_PWSID, '&year=', Input_Year)
+  
+  #print(Scrape_URL)
+  
+  Function_URL <- read_html(Scrape_URL)
+  
+  Function_Water_System_Name <- Function_URL %>% 
+    html_nodes("div+ table tr:nth-child(1) td:nth-child(2)") %>% 
+    html_text()
+  
+  Function_PWSID <- Function_URL %>% 
+    html_nodes("td tr:nth-child(1) td:nth-child(5)") %>% 
+    html_text()
+  
+  Function_Ownership <- Function_URL %>% 
+    html_nodes("div+ table tr:nth-child(2) td:nth-child(4)") %>% 
+    html_text()
+
+  Function_MGD <- Function_URL %>% 
+    html_nodes("th~ td+ td") %>% 
+    html_text()
+
+  Water_Months <- c("Jan", "May", "Sept", "Feb", "June", "Oct",
+            "Mar", "Jul", "Nov", "Apr", "Aug", "Dec")
+  
+  Date <- c(1, 5, 9, 2, 6, 10, 3, 7, 11, 4, 8, 12)
+  
+  Function_WaterUsage_DF <- data.frame(
+    "Water_System" = rep(Function_Water_System_Name),
+    "Max_Day_Use" = as.numeric(Function_MGD),
+    "PWSID" = rep(Function_PWSID),
+    "Ownership" = rep(Function_Ownership),
+    "Month_Name" = Water_Months,
+    "Month_Date" = as.numeric(Date)) }
 
 ```
 
 7. Use the function above to extract and plot max daily withdrawals for Durham (PWSID='03-32-010') for each month in 2015
 
 ```{r fetch.and.plot.Durham.2015.data}
-#7 
+#7 Run the function using Durham 2015 data
 
+Water_Usage_Function("03-32-010", 2015)
 
 ```
 
 8. Use the function above to extract data for Asheville (PWSID = 01-11-010) in 2015. Combine this data with the Durham data collected above and create a plot that compares Asheville's to Durham's water withdrawals.
 
 ```{r fetch.and.plot.Asheville.2015.data}
-#8 
 
+#8 Extract Durham and Asheville Data from 2015
+#Use the Water_Usage_DF_Function, with no automatic plots
+#This will allow assignment of data frames from two counties
+#From the two data frames, manually plot both data sets on the same graph
+
+Durham_Data <- as.data.frame(Water_Usage_DF_Function("03-32-010", 2015))
+Asheville_Data <- as.data.frame(Water_Usage_DF_Function("01-11-010", 2015))
+
+plot_grid(Durham_Data, Asheville_Data)
+
+#Combine the data sets into one data frame
+
+County_Water_Use <- rbind(Durham_Data, Asheville_Data)
+
+#view(County_Water_Use)
+
+#Plot the two counties on the same graph with ggplot
+
+County_MDG_Graph <- ggplot(data = County_Water_Use,
+            aes(x = Month_Date, y = Max_Day_Use,
+       color = Water_System)) + 
+  geom_line() + theme_light() +
+  labs(title = "Maximum Daily Water Usage",
+                       subtitle = "Durham and Asheville, 2015",
+                       x = "Month",
+                       y = "Max Daily Usage (MDG)",
+       color = "County") +
+    scale_x_continuous(breaks = seq(1, 12, by = 1), labels = month.abb)
+
+County_MDG_Graph
 
 ```
 
@@ -179,7 +332,17 @@ Water_Plot <- ggplot(Durham_Water_DF, aes(x = Month_Date, y = Max_Day_Use)) +
 > TIP: See Section 3.2 in the "10_Data_Scraping.Rmd" where we apply "map2()" to iteratively run a function over two inputs. Pipe the output of the map2() function to `bindrows()` to combine the dataframes into a single one. 
 
 ```{r fetch.and.plot.Asheville.multiyear.data }
+
 #9 
+dfs_2020 <- map2(the_years, the_facility_ids_subset, Water_Usage_DF_Function) 
+
+#Conflate the returned list of dataframes into a single one
+df_2020 <- bind_rows(dfs_2020)
+
+
+#Plot
+ggplot(df_2020,aes(y = Avg_Withdrawals_mgd, x=Facility_type)) +
+  geom_boxplot()
 
 
 ```
