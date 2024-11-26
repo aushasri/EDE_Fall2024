@@ -325,7 +325,7 @@ County_MDG_Graph
 ```
 
 
-9. Use the code & function you created above to plot Asheville's max daily withdrawal by months for the years 2018 thru 2022.Add a smoothed line to the plot (method = 'loess').
+9. Use the code & function you created above to plot Asheville's max daily withdrawal by months for the years 2018 thru 2022. Add a smoothed line to the plot (method = 'loess').
 
 > TIP: See Section 3.2 in the "10_Data_Scraping.Rmd" where we apply "map2()" to iteratively run a function over two inputs. Pipe the output of the map2() function to `bindrows()` to combine the dataframes into a single one. 
 
@@ -342,26 +342,29 @@ Asheville_Multiyear_DF <- map2(Asheville_PWSID, Asheville_Years,
   map2(Asheville_Years, ., ~ mutate(.y, Year = .x)) %>%
   bind_rows()
 
-#view(Asheville_Multiyear_DF)
+Asheville_Multiyear_Date_DF <- Asheville_Multiyear_DF %>%
+  mutate(Date = my(paste(Month_Date, Year)))
+
+view(Asheville_Multiyear_Date_DF)
 
 #Plot Multiple Years
-ggplot(Asheville_Multiyear_DF) +
-  geom_line(aes(x=Month_Date, y=Max_Day_Use, color=as.character(Year))) +
-    geom_smooth(aes(x = Month_Date, y = Max_Day_Use),
-                method = "loess", se = FALSE, color = "black") +
+ggplot(Asheville_Multiyear_Date_DF) +
+  geom_line(aes(x=Date, y=Max_Day_Use)) +
+    geom_smooth(aes(x = Date, y = Max_Day_Use),
+                method = "loess", se = FALSE) +
   labs(title = "Water Usage in Asheville",
        subtitle = "2018 to 2022",
        y="Maximum Water Usage (MGD)",
-       x="Month",
-       color = "Year") +
+       x="Year") +
   theme_light() +
-    scale_x_continuous(breaks = seq(1, 12, by = 1),
-      labels = month.abb)
+    scale_x_date(date_labels = "%Y", date_breaks = "1 year") 
 
 ```
 
 Question: Just by looking at the plot (i.e. not running statistics), does Asheville have a trend in water usage over time?
 
-> Answer: Asheville has variability between years regarding the water usage. For example, Asheville had a lower water usage in 2018 than in 2019. The water usage in September 2018 was under 25 MGD, whereas the water usage in September 2019 was above 27.5. The water usage in 2020 and 2021 dropped from the 2019 levels.
+> Answer: In general, water usage increased in Asheville from 2018 - 2022, with a minor decline in 2020. This data also displays a seasonal trend over time, shown by the increases and decreases within each year.
 
-> This data showcases a seasonal trend over time. Water usage in Asheville peaks around the warmer months of August/September. In contrast, the water usage drops in March/April and November. 2022 differs from this trend slightly. Although this year follows a similar general seasonality trend, peak water usage in 2022 occured in May/June, with another sudden peak in December. Overall, Asheville displays a seasonal trend in water usage over time.
+> There is some deviance from the broader trend of increasing water usage. Specifically, the water usage in 2020 dropped from the 2019 levels. By 2022, water usage picked back up and continued to increase beyond previous years.
+
+> Further investigation would be required to determine any correlating variables to the 2020 decline. Overall, water usage has increased over time in Asheville with a slight fall in 2020.
