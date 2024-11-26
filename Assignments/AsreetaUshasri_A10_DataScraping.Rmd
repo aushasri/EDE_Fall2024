@@ -350,8 +350,8 @@ view(Asheville_Multiyear_Date_DF)
 #Plot Multiple Years
 ggplot(Asheville_Multiyear_Date_DF) +
   geom_line(aes(x=Date, y=Max_Day_Use)) +
-    geom_smooth(aes(x = Date, y = Max_Day_Use),
-                method = "loess", se = FALSE) +
+    geom_smooth(aes(x=Date, y=Max_Day_Use),
+                method="loess") +
   labs(title = "Water Usage in Asheville",
        subtitle = "2018 to 2022",
        y="Maximum Water Usage (MGD)",
